@@ -1,5 +1,6 @@
 package com.outbreak.backend.security.services;
 
+import com.outbreak.backend.model.Division;
 import com.outbreak.backend.model.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
@@ -31,15 +32,29 @@ public class UserDetailsImpl implements UserDetails {
     @JsonIgnore
     private String password;
 
+    private Division division;
+
     private Collection<? extends GrantedAuthority> authorities;
 
-    public UserDetailsImpl(Long id, String username, String email, String firstName, String lastName, String password, Collection<? extends GrantedAuthority> authorities) {
+//    public UserDetailsImpl(Long id, String username, String email, String firstName, String lastName, String password, Collection<? extends GrantedAuthority> authorities) {
+//        this.id = id;
+//        this.username = username;
+//        this.email = email;
+//        this.firstName = firstName;
+//        this.lastName = lastName;
+//        this.password = password;
+//        this.authorities = authorities;
+//    }
+
+
+    public UserDetailsImpl(Long id, String username, String email, String firstName, String lastName, String password, Division division, Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.username = username;
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
         this.password = password;
+        this.division = division;
         this.authorities = authorities;
     }
 
@@ -55,6 +70,7 @@ public class UserDetailsImpl implements UserDetails {
                 user.getFirstName(),
                 user.getLastName(),
                 user.getPassword(),
+                user.getDivision(),
                 authorities);
     }
 
@@ -83,6 +99,10 @@ public class UserDetailsImpl implements UserDetails {
 
     public String getFirstName() {
         return firstName;
+    }
+
+    public Division getDivision() {
+        return division;
     }
 
     public String getLastName() {

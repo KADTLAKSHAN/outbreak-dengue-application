@@ -35,12 +35,21 @@ public class UserServiceImpl implements UserService{
     PasswordEncoder encoder;
 
     @Override
-    public UserResponse searchUserByUserName(String userName, Integer pageNumber, Integer pageSize, String sortBy, String sortOrder) {
+    public UserResponse searchUserByIdOrUserName(String input, Integer pageNumber, Integer pageSize, String sortBy, String sortOrder) {
         Sort sortByAndOrder = sortOrder.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
 
         Pageable pageDetails = PageRequest.of(pageNumber, pageSize, sortByAndOrder);
 
-        Page<User> userPage = userRepository.findByUserNameLikeIgnoreCase("%"+ userName + "%", pageDetails);
+        Page<User> userPage;
+
+        // Check if input is a valid userId (numeric)
+        try {
+            Long userId = Long.parseLong(input);
+            userPage = userRepository.findByUserIdOrUserNameLikeIgnoreCase(userId, "%"+ input + "%", pageDetails);
+        } catch (NumberFormatException e) {
+            // If not numeric, treat it as a username search
+            userPage = userRepository.findByUserNameLikeIgnoreCase("%" + input + "%", pageDetails);
+        }
 
         List<User> users = userPage.getContent();
 

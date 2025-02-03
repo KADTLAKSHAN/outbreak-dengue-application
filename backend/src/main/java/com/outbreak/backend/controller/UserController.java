@@ -18,14 +18,14 @@ public class UserController {
     UserService userService;
 
 
-    @GetMapping("/public/users/username/{userName}")
-    public ResponseEntity<UserResponse> getUserByUserName(@PathVariable String userName,
+    @GetMapping("/public/users/username/{input}")
+    public ResponseEntity<UserResponse> getUserByUserNameOrId(@PathVariable String input,
                                                           @RequestParam(name = "pageNumber", defaultValue = AppConstants.PAGE_NUMBER, required = false) Integer pageNumber,
                                                           @RequestParam(name = "pageSize", defaultValue = AppConstants.PAGE_SIZE, required = false) Integer pageSize,
                                                           @RequestParam(name = "sortBy", defaultValue = AppConstants.SORT_USERS_BY, required = false) String sortBy,
                                                           @RequestParam(name = "sortOrder", defaultValue = AppConstants.SORT_DIR, required = false) String sortOrder){
 
-        UserResponse userResponse = userService.searchUserByUserName(userName, pageNumber, pageSize, sortBy, sortOrder);
+        UserResponse userResponse = userService.searchUserByIdOrUserName(input, pageNumber, pageSize, sortBy, sortOrder);
         return new ResponseEntity<>(userResponse, HttpStatus.FOUND);
 
 

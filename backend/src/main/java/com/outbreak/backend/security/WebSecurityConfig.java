@@ -1,9 +1,7 @@
 package com.outbreak.backend.security;
 
-import com.outbreak.backend.model.AppRole;
-import com.outbreak.backend.model.Division;
-import com.outbreak.backend.model.Role;
-import com.outbreak.backend.model.User;
+import com.outbreak.backend.model.*;
+import com.outbreak.backend.repositories.DistrictRepository;
 import com.outbreak.backend.repositories.DivisionRepository;
 import com.outbreak.backend.repositories.RoleRepository;
 import com.outbreak.backend.repositories.UserRepository;
@@ -106,7 +104,7 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    public CommandLineRunner initData(RoleRepository roleRepository, UserRepository userRepository, PasswordEncoder passwordEncoder, DivisionRepository divisionRepository) {
+    public CommandLineRunner initData(RoleRepository roleRepository, UserRepository userRepository, PasswordEncoder passwordEncoder, DivisionRepository divisionRepository, DistrictRepository districtRepository) {
         return args -> {
             // Retrieve or create roles
             Role publicUserRole = roleRepository.findByRoleName(AppRole.ROLE_PUBLIC_USER)
@@ -133,19 +131,19 @@ public class WebSecurityConfig {
             Set<Role> adminRoles = Set.of(publicUserRole, mohUserRole, adminRole);
 
             // Create Division and District for testing
-//            if(!districtRepository.existsByDistrictName("Colombo")){
-//
-//                District colomboDistrict = new District("Colombo");
-//
-//                districtRepository.save(colomboDistrict);
-//
-//            }
+            if(!districtRepository.existsByDistrictName("Colombo")){
+
+                District colomboDistrict = new District("Colombo");
+
+                districtRepository.save(colomboDistrict);
+
+            }
 
             if(!divisionRepository.existsByDivisionName("Nugegoda")){
 
                 Division nugegodaDivision = new Division("Nugegoda_Division");
-//                District dst1 = districtRepository.findByDistrictName("Colombo");
-//                nugegodaDivision.setDistrict(dst1);
+                District dst1 = districtRepository.findByDistrictName("Colombo");
+                nugegodaDivision.setDistrict(dst1);
 
                 divisionRepository.save(nugegodaDivision);
 

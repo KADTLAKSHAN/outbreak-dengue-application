@@ -1,8 +1,10 @@
 package com.outbreak.backend.controller;
 
 import com.outbreak.backend.config.AppConstants;
+import com.outbreak.backend.payload.UserDTO;
 import com.outbreak.backend.payload.UserResponse;
 import com.outbreak.backend.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,5 +44,23 @@ public class UserController {
 
 
     }
+
+    @DeleteMapping("/admin/users/{userId}")
+    public ResponseEntity<UserDTO> deleteUser(@PathVariable Long userId){
+
+        UserDTO deletedUTO = userService.deleteUserById(userId);
+        return new ResponseEntity<>(deletedUTO, HttpStatus.OK);
+
+    }
+
+    @PutMapping("/public/users/{userId}")
+    public ResponseEntity<UserDTO> updateUser(@Valid @RequestBody UserDTO userDTO, @PathVariable Long userId){
+
+        UserDTO saveUserDTO = userService.updateUser(userDTO, userId);
+        return new ResponseEntity<>(saveUserDTO, HttpStatus.OK);
+
+    }
+
+
 
 }

@@ -1,9 +1,12 @@
 package com.outbreak.backend.service;
 
 import com.outbreak.backend.exceptions.APIException;
+import com.outbreak.backend.exceptions.ResourceNotFoundException;
+import com.outbreak.backend.model.Division;
 import com.outbreak.backend.model.User;
 import com.outbreak.backend.payload.UserDTO;
 import com.outbreak.backend.payload.UserResponse;
+import com.outbreak.backend.repositories.DivisionRepository;
 import com.outbreak.backend.repositories.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,7 +26,13 @@ public class UserServiceImpl implements UserService{
     UserRepository userRepository;
 
     @Autowired
+    DivisionRepository divisionRepository;
+
+    @Autowired
     ModelMapper modelMapper;
+
+    @Autowired
+    PasswordEncoder encoder;
 
     @Override
     public UserResponse searchUserByUserName(String userName, Integer pageNumber, Integer pageSize, String sortBy, String sortOrder) {
@@ -77,5 +87,30 @@ public class UserServiceImpl implements UserService{
         userResponse.setLastpage(userPage.isLast());
         return userResponse;
 
+    }
+
+    @Override
+    public UserDTO deleteUserById(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "userID", userId));
+
+        userRepository.delete(user);
+        return modelMapper.map(user, UserDTO.class);
+    }
+
+    @Override
+    public UserDTO updateUser(UserDTO userDTO, Long userId) {
+        User savedUser = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User","userId",userId));
+
+        Division division = divisionRepository.findById(userDTO.getDivisionId())
+                .orElseThrow(() -> new ResourceNotFoundException("Division","divisionId",userDTO.getDivisionId()));
+
+        User user = modelMapper.map(userDTO,User.class);
+        user.setUserId(userId);
+        user.setPassword(encoder.encode(userDTO.getPassword()));
+        user.setDivision(division);
+        savedUser = userRepository.save(user);
+        return modelMapper.map(savedUser,UserDTO.class);
     }
 }

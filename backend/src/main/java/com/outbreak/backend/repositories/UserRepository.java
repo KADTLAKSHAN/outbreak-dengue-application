@@ -1,5 +1,6 @@
 package com.outbreak.backend.repositories;
 
+import com.outbreak.backend.model.District;
 import com.outbreak.backend.model.Division;
 import com.outbreak.backend.model.User;
 import org.springframework.data.domain.Page;

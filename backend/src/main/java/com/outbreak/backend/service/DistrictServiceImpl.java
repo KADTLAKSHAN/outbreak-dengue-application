@@ -2,10 +2,12 @@ package com.outbreak.backend.service;
 
 import com.outbreak.backend.exceptions.APIException;
 import com.outbreak.backend.exceptions.ResourceNotFoundException;
+import com.outbreak.backend.model.Alert;
 import com.outbreak.backend.model.District;
 import com.outbreak.backend.model.Division;
 import com.outbreak.backend.payload.DistrictDTO;
 import com.outbreak.backend.payload.DistrictResponse;
+import com.outbreak.backend.repositories.AlertRepository;
 import com.outbreak.backend.repositories.DistrictRepository;
 import com.outbreak.backend.repositories.DivisionRepository;
 import org.modelmapper.ModelMapper;
@@ -27,6 +29,9 @@ public class DistrictServiceImpl implements DistrictService{
     ModelMapper modelMapper;
     @Autowired
     DivisionRepository divisionRepository;
+
+    @Autowired
+    AlertRepository alertRepository;
 
 
     @Override
@@ -121,6 +126,13 @@ public class DistrictServiceImpl implements DistrictService{
             division.setDistrict(null);
             divisionRepository.save(division);
         }
+
+        List<Alert> alerts = alertRepository.findByDistrict(district);
+        for (Alert alert : alerts){
+            alert.setDistrict(null);
+            alertRepository.save(alert);
+        }
+
 
         districtRepository.delete(district);
         return modelMapper.map(district,DistrictDTO.class);

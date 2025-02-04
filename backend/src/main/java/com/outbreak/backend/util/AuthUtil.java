@@ -1,5 +1,6 @@
 package com.outbreak.backend.util;
 
+import com.outbreak.backend.model.District;
 import com.outbreak.backend.model.User;
 import com.outbreak.backend.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +47,19 @@ public class AuthUtil {
                 .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + authentication.getName()));
 
         return user.getUserName();
+
+    }
+
+    public District loggedInDistrict(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        User user = loggedInUser();
+
+        if (user.getDivision() == null || user.getDivision().getDistrict() == null) {
+            throw new UsernameNotFoundException("User Not Found with district or division: " + authentication.getName());
+        }
+
+        return user.getDivision().getDistrict();
 
     }
 

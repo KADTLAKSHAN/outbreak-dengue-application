@@ -8,6 +8,8 @@ public class AppConstants {
     public static final String SORT_DISTRICTS_BY = "districtId";
     public static final String SORT_COMPLAINTS_BY = "complaintDate";
 
+    public static final String SORT_ALERTS_BY = "alertId";
+
     public static final String SORT_DIR = "asc";
 
 }

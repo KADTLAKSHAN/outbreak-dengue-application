@@ -49,7 +49,7 @@ public class User {
     private String password;
 
     @ManyToOne
-    @JoinColumn(name = "division_id", nullable = false)
+    @JoinColumn(name = "division_id", nullable = true)
     private Division division;
 
     public User(String userName, String email, String firstName, String lastName, String password, Division division) {

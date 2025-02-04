@@ -18,7 +18,7 @@ public class Division {
     private String divisionName;
 
     @ManyToOne
-    @JoinColumn(name = "district_id")
+    @JoinColumn(name = "district_id", nullable = true)
     private District district;
 
     public Division(String divisionName) {

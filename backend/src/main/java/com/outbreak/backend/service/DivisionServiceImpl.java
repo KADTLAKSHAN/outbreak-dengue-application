@@ -19,6 +19,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class DivisionServiceImpl implements DivisionService{
@@ -74,11 +75,17 @@ public class DivisionServiceImpl implements DivisionService{
         if(divisions.isEmpty())
             throw new APIException("Divisions not exists");
 
-        List<DivisionDTO> divisionDTOS = divisions.stream().map(division -> {
-            DivisionDTO divisionDTO = modelMapper.map(division, DivisionDTO.class);
-            divisionDTO.setDistrictId(division.getDistrict().getDistrictId());
-            return divisionDTO;
-        }).toList();
+//        List<DivisionDTO> divisionDTOS = divisions.stream().map(division -> {
+//            DivisionDTO divisionDTO = modelMapper.map(division, DivisionDTO.class);
+//            divisionDTO.setDistrictId(Optional.ofNullable(division.getDistrict())
+//                                  .map(District::getDistrictId)
+//                                  .orElse(null));
+//            return divisionDTO;
+//        }).toList();
+
+        List<DivisionDTO> divisionDTOS = divisions.stream().map(division ->
+                modelMapper.map(division, DivisionDTO.class))
+                .toList();
 
         DivisionResponse divisionResponse = new DivisionResponse();
         divisionResponse.setContent(divisionDTOS);
@@ -97,17 +104,17 @@ public class DivisionServiceImpl implements DivisionService{
                 .orElseThrow(() -> new ResourceNotFoundException("Division","divisionId",divisionId));
 
         // Check if users are associated with this division
-        List<User> users = userRepository.findByDivision(division);
-        if (!users.isEmpty()) {
-            throw new APIException("Cannot delete division. It is assigned to users.");
-        }
+//        List<User> users = userRepository.findByDivision(division);
+//        if (!users.isEmpty()) {
+//            throw new APIException("Cannot delete division. It is assigned to users.");
+//        }
 
         // Remove division reference from users
-//        List<User> users = userRepository.findByDivision(division);
-//        for (User user : users) {
-//            user.setDivision(null);
-//            userRepository.save(user);
-//        }
+        List<User> users = userRepository.findByDivision(division);
+        for (User user : users) {
+            user.setDivision(null);
+            userRepository.save(user);
+        }
 
         divisionRepository.delete(division);
         return modelMapper.map(division,DivisionDTO.class);
@@ -143,7 +150,7 @@ public class DivisionServiceImpl implements DivisionService{
         List<Division> divisions = divisionPage.getContent();
 
         if(divisions.isEmpty())
-            throw new APIException("Divisions/Division not found with username");
+            throw new APIException("Divisions/Division not found with division value");
 
         List<DivisionDTO> divisionDTOS = divisions.stream()
                 .map(division -> modelMapper.map(division, DivisionDTO.class))

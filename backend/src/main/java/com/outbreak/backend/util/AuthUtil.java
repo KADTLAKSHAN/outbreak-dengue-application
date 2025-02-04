@@ -1,13 +1,14 @@
 package com.outbreak.backend.util;
 
-import com.outbreak.backend.model.Division;
 import com.outbreak.backend.model.User;
 import com.outbreak.backend.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Component;
 
+@Component
 public class AuthUtil {
 
     @Autowired
@@ -35,6 +36,16 @@ public class AuthUtil {
         User user = userRepository.findByUserName(authentication.getName())
                 .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + authentication.getName()));
         return user;
+
+    }
+
+    public String loggedInUserName(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        User user = userRepository.findByUserName(authentication.getName())
+                .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + authentication.getName()));
+
+        return user.getUserName();
 
     }
 

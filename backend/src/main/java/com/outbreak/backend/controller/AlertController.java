@@ -2,7 +2,7 @@ package com.outbreak.backend.controller;
 
 import com.outbreak.backend.config.AppConstants;
 import com.outbreak.backend.payload.*;
-import com.outbreak.backend.service.AlertServices;
+import com.outbreak.backend.service.AlertService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,12 +14,12 @@ import org.springframework.web.bind.annotation.*;
 public class AlertController {
 
     @Autowired
-    AlertServices alertServices;
+    AlertService alertService;
 
     @PostMapping("/public/alerts/{districtId}")
     public ResponseEntity<AlertDTO> createAlert(@Valid @RequestBody AlertDTO alertDTO, @PathVariable Long districtId){
 
-        AlertDTO savedAlertDTO = alertServices.createAlert(alertDTO,districtId);
+        AlertDTO savedAlertDTO = alertService.createAlert(alertDTO,districtId);
         return new ResponseEntity<>(savedAlertDTO, HttpStatus.CREATED);
 
     }
@@ -27,7 +27,7 @@ public class AlertController {
     @DeleteMapping("/admin/alerts/{alertId}")
     public ResponseEntity<AlertDTO> deleteAlert(@PathVariable Long alertId){
 
-        AlertDTO deletedAlertDTO = alertServices.deleteAlert(alertId);
+        AlertDTO deletedAlertDTO = alertService.deleteAlert(alertId);
         return new ResponseEntity<>(deletedAlertDTO, HttpStatus.OK);
 
     }
@@ -38,7 +38,7 @@ public class AlertController {
             @RequestParam(name = "pageSize", defaultValue = AppConstants.PAGE_SIZE, required = false) Integer pageSize,
             @RequestParam(name = "sortBy", defaultValue = AppConstants.SORT_ALERTS_BY, required = false) String sortBy,
             @RequestParam(name = "sortOrder", defaultValue = AppConstants.SORT_DIR, required = false) String sortOrder){
-        AlertResponse alertResponse = alertServices.getAllAlert(pageNumber, pageSize, sortBy, sortOrder);
+        AlertResponse alertResponse = alertService.getAllAlert(pageNumber, pageSize, sortBy, sortOrder);
         return new ResponseEntity<>(alertResponse, HttpStatus.OK);
     }
 
@@ -48,7 +48,7 @@ public class AlertController {
             @RequestParam(name = "pageSize", defaultValue = AppConstants.PAGE_SIZE, required = false) Integer pageSize,
             @RequestParam(name = "sortBy", defaultValue = AppConstants.SORT_ALERTS_BY, required = false) String sortBy,
             @RequestParam(name = "sortOrder", defaultValue = AppConstants.SORT_DIR, required = false) String sortOrder){
-        AlertResponse alertResponse = alertServices.getDistrictAlerts(pageNumber, pageSize, sortBy, sortOrder);
+        AlertResponse alertResponse = alertService.getDistrictAlerts(pageNumber, pageSize, sortBy, sortOrder);
         return new ResponseEntity<>(alertResponse, HttpStatus.OK);
     }
 
@@ -59,7 +59,7 @@ public class AlertController {
             @RequestParam(name = "pageSize", defaultValue = AppConstants.PAGE_SIZE, required = false) Integer pageSize,
             @RequestParam(name = "sortBy", defaultValue = AppConstants.SORT_ALERTS_BY, required = false) String sortBy,
             @RequestParam(name = "sortOrder", defaultValue = AppConstants.SORT_DIR, required = false) String sortOrder){
-        AlertResponse alertResponse = alertServices.searchAlertByDistrictIdOrDistrictName(input, pageNumber, pageSize, sortBy, sortOrder);
+        AlertResponse alertResponse = alertService.searchAlertByDistrictIdOrDistrictName(input, pageNumber, pageSize, sortBy, sortOrder);
         return new ResponseEntity<>(alertResponse, HttpStatus.OK);
     }
 
@@ -68,7 +68,7 @@ public class AlertController {
     @PutMapping("/admin/alert/{alertId}")
     public ResponseEntity<AlertDTO> updateAlerts(@Valid @RequestBody AlertDTO alertDTO, @PathVariable Long alertId){
 
-        AlertDTO savedAlertDTO = alertServices.updateAlert(alertDTO,alertId);
+        AlertDTO savedAlertDTO = alertService.updateAlert(alertDTO,alertId);
         return new ResponseEntity<>(savedAlertDTO,HttpStatus.OK);
 
     }

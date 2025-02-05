@@ -10,6 +10,9 @@ public class AppConstants {
 
     public static final String SORT_ALERTS_BY = "alertId";
 
+    public static final String SORT_ARTICLES_BY = "articleId";
+
+
     public static final String SORT_DIR = "asc";
 
 }

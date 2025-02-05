@@ -3,7 +3,7 @@ package com.outbreak.backend.service;
 import com.outbreak.backend.payload.AlertDTO;
 import com.outbreak.backend.payload.AlertResponse;
 
-public interface AlertServices {
+public interface AlertService {
     AlertDTO createAlert(AlertDTO alertDTO, Long districtId);
 
     AlertDTO deleteAlert(Long alertId);

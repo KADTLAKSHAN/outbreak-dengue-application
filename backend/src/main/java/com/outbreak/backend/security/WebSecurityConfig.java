@@ -80,6 +80,7 @@ public class WebSecurityConfig {
                                 .requestMatchers("/api/test/**").permitAll()
                                 .requestMatchers("/images/**").permitAll()
                                 .requestMatchers("/api/public/alerts").permitAll()
+                                .requestMatchers("/api/public/caseData/get").permitAll()
                                 .anyRequest().authenticated()
                 );
 

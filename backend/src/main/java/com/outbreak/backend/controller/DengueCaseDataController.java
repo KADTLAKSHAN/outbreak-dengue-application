@@ -25,7 +25,7 @@ public class DengueCaseDataController {
 
     }
 
-    @GetMapping("/public/caseData")
+    @GetMapping("/public/caseData/get")
     public ResponseEntity<List<CaseDataDTO>> getAllCaseData(){
         List<CaseDataDTO> caseDataDTOList = dengueCaseDataService.getAllCaseData();
         return new ResponseEntity<>(caseDataDTOList, HttpStatus.OK);

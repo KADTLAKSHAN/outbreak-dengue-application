@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 public class CaseDataDTO {
     private Long caseId;
     private String districtName;
-    private String caseYear;
+    private Integer caseYear;
     private String caseMonth;
     private Integer noCases;
 }

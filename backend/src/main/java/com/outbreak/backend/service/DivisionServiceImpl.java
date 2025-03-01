@@ -2,9 +2,11 @@ package com.outbreak.backend.service;
 
 import com.outbreak.backend.exceptions.APIException;
 import com.outbreak.backend.exceptions.ResourceNotFoundException;
+import com.outbreak.backend.model.CaseData;
 import com.outbreak.backend.model.District;
 import com.outbreak.backend.model.Division;
 import com.outbreak.backend.model.User;
+import com.outbreak.backend.payload.CaseDataDTO;
 import com.outbreak.backend.payload.DivisionDTO;
 import com.outbreak.backend.payload.DivisionResponse;
 import com.outbreak.backend.repositories.DistrictRepository;
@@ -64,38 +66,17 @@ public class DivisionServiceImpl implements DivisionService{
     }
 
     @Override
-    public DivisionResponse getAllDivisions(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder) {
-        Sort sortByAndOrder = sortOrder.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+    public List<DivisionDTO> getAllDivisions() {
+        List<Division> divisionList = divisionRepository.findAll();
 
-        Pageable pageDetails = PageRequest.of(pageNumber, pageSize, sortByAndOrder);
-        Page<Division> divisionPage = divisionRepository.findAll(pageDetails);
+        if(divisionList.isEmpty())
+            throw new APIException("Division data not exists");
 
-        List<Division> divisions = divisionPage.getContent();
-
-        if(divisions.isEmpty())
-            throw new APIException("Divisions not exists");
-
-//        List<DivisionDTO> divisionDTOS = divisions.stream().map(division -> {
-//            DivisionDTO divisionDTO = modelMapper.map(division, DivisionDTO.class);
-//            divisionDTO.setDistrictId(Optional.ofNullable(division.getDistrict())
-//                                  .map(District::getDistrictId)
-//                                  .orElse(null));
-//            return divisionDTO;
-//        }).toList();
-
-        List<DivisionDTO> divisionDTOS = divisions.stream().map(division ->
-                modelMapper.map(division, DivisionDTO.class))
+        List<DivisionDTO> divisionDTOList = divisionList.stream()
+                .map(division -> modelMapper.map(division, DivisionDTO.class))
                 .toList();
 
-        DivisionResponse divisionResponse = new DivisionResponse();
-        divisionResponse.setContent(divisionDTOS);
-        divisionResponse.setPageNumber(divisionPage.getNumber());
-        divisionResponse.setPageSize(divisionPage.getSize());
-        divisionResponse.setTotalElements(divisionPage.getTotalElements());
-        divisionResponse.setTotalpages(divisionPage.getTotalPages());
-        divisionResponse.setLastPage(divisionPage.isLast());
-
-        return divisionResponse;
+        return divisionDTOList;
     }
 
     @Override

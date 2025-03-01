@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api")
 public class DivisionController {
@@ -18,13 +20,9 @@ public class DivisionController {
     DivisionService divisionService;
 
     @GetMapping("/public/division")
-    public ResponseEntity<DivisionResponse> getAllDivisions(
-            @RequestParam(name = "pageNumber", defaultValue = AppConstants.PAGE_NUMBER, required = false) Integer pageNumber,
-            @RequestParam(name = "pageSize", defaultValue = AppConstants.PAGE_SIZE, required = false) Integer pageSize,
-            @RequestParam(name = "sortBy", defaultValue = AppConstants.SORT_DIVISIONS_BY, required = false) String sortBy,
-            @RequestParam(name = "sortOrder", defaultValue = AppConstants.SORT_DIR, required = false) String sortOrder){
-        DivisionResponse divisionResponse = divisionService.getAllDivisions(pageNumber, pageSize, sortBy, sortOrder);
-        return new ResponseEntity<>(divisionResponse,HttpStatus.OK);
+    public ResponseEntity<List<DivisionDTO>> getAllDivisions(){
+        List<DivisionDTO> divisionDTOS = divisionService.getAllDivisions();
+        return new ResponseEntity<>(divisionDTOS,HttpStatus.OK);
     }
 
     @GetMapping("/public/division/value/{input}")

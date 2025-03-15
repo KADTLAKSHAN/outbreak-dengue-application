@@ -59,40 +59,31 @@ public class PredictionServiceImpl implements PredictionService{
         WeatherData latestWeatherData = predictionRepository.findLatestWeatherDataByDistrict(district)
                 .orElseThrow(() -> new APIException("No weather data found for the district"));
 
-        // Format district name to match FastAPI input
-        String formattedDistrictName = "District_" + district.getDistrictName();
 
         // Call FastAPI prediction model
-        PredictionResponseDTO predictionResponse = callFastAPIPrediction(latestWeatherData, formattedDistrictName);
+        PredictionResponseDTO predictionResponse = callFastAPIPrediction(latestWeatherData, district.getDistrictName());
 
         return predictionResponse;
 
     }
 
-    public PredictionResponseDTO callFastAPIPrediction(WeatherData weatherData, String formattedDistrictName){
+    public PredictionResponseDTO callFastAPIPrediction(WeatherData weatherData, String districtName){
 
         RestTemplate restTemplate = new RestTemplate();
         String apiUrl = "http://0.0.0.0:8000/predict/";
 
         // Create request body with the formatted district name
         Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("district", formattedDistrictName);
-        requestBody.put("Month", weatherData.getPredictMonth());
-        requestBody.put("Year", weatherData.getPredictYear());
-        requestBody.put("Week", weatherData.getPredictWeek());
-        requestBody.put("AvgMaxTemp", weatherData.getAvgMaxTemp());
-        requestBody.put("AvgMinTemp", weatherData.getAvgMinTemp());
-        requestBody.put("AvgApparentMaxTemp", weatherData.getAvgApparentMaxTemp());
-        requestBody.put("AvgApparentMinTemp", weatherData.getAvgApparentMinTemp());
-        requestBody.put("TotalPrecipitation", weatherData.getTotalPrecipitation());
-        requestBody.put("AvgWindSpeed", weatherData.getAvgWindSpeed());
-        requestBody.put("MaxWindGusts", weatherData.getMaxWindGusts());
-        requestBody.put("WeatherCode", weatherData.getWeatherCode());
-        requestBody.put("Cases_Last_Week", weatherData.getCases_Last_Week());
-        requestBody.put("Cases_Last_2_Weeks", weatherData.getCases_Last_2_Weeks());
-        requestBody.put("Cases_3_Week_Avg", weatherData.getCases_3_Week_Avg());
-        requestBody.put("Cases_5_Week_Avg", weatherData.getCases_5_Week_Avg());
-        requestBody.put("Cases_Diff_1_Week", weatherData.getCases_Diff_1_Week());
+        requestBody.put("district", districtName);
+        requestBody.put("month", weatherData.getPredictMonth());
+        requestBody.put("year", weatherData.getPredictYear());
+        requestBody.put("week", weatherData.getPredictWeek());
+        requestBody.put("max_temp", weatherData.getAvgMaxTemp());
+        requestBody.put("min_temp", weatherData.getAvgMinTemp());
+        requestBody.put("rain", weatherData.getTotalPrecipitation());
+        requestBody.put("wind", weatherData.getAvgWindSpeed());
+        requestBody.put("gust", weatherData.getMaxWindGusts());
+        requestBody.put("weather_code", weatherData.getWeatherCode());
 
         // Make HTTP request
         HttpHeaders headers = new HttpHeaders();
@@ -112,7 +103,15 @@ public class PredictionServiceImpl implements PredictionService{
 
     @Override
     public PredictionResponseDTO getPrediction(WeatherDataDTO weatherDataDTO, Long districtId) {
-        return null;
+
+        District district = districtRepository.findById(districtId)
+                .orElseThrow(() -> new ResourceNotFoundException("District", "districtId", districtId));
+
+
+        WeatherData weatherData = modelMapper.map(weatherDataDTO, WeatherData.class);
+
+        return callFastAPIPrediction(weatherData, district.getDistrictName());
+
     }
 
 

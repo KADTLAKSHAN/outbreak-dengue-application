@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
-function LoginRegisterModal({ isOpen, onClose }) {
+function LoginRegisterModal({ isOpen, onClose, onLoginSuccess }) {
   const [isLogin, setIsLogin] = useState(true);
   const [formData, setFormData] = useState({
     username: "",
@@ -11,6 +12,8 @@ function LoginRegisterModal({ isOpen, onClose }) {
     divisionId: "",
   });
   const [divisions, setDivisions] = useState([]);
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetch("http://localhost:8080/api/public/division")
@@ -23,30 +26,43 @@ function LoginRegisterModal({ isOpen, onClose }) {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const endpoint = isLogin
-      ? "http://localhost:8080/api/auth/login"
-      : "http://localhost:8080/api/auth/register";
+      ? "http://localhost:8080/api/auth/signin"
+      : "http://localhost:8080/api/auth/signup";
 
-    fetch(endpoint, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formData),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("Response:", data);
-        if (isLogin && data.jwtToken) {
-          document.cookie = `jwtToken=${data.jwtToken}; path=/`;
+    try {
+      const response = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+        credentials: "include", // Include cookies in the request
+      });
+
+      const data = await response.json();
+      console.log("Response:", data);
+
+      if (isLogin) {
+        // Ensure the response contains user data
+        if (data && data.roles) {
+          // Store user data in localStorage
+          localStorage.setItem("user", JSON.stringify(data));
           alert("Login successful!");
           onClose();
-        } else if (!isLogin) {
-          alert("Registration successful! You can now log in.");
-          setIsLogin(true);
+          onLoginSuccess(JSON.stringify(data)); // Call the callback here
+          navigate("/dashboard");
+        } else {
+          throw new Error("Invalid user data in login response");
         }
-      })
-      .catch((err) => console.error("Error:", err));
+      } else {
+        alert("Registration successful! You can now log in.");
+        setIsLogin(true);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      setError("Login failed. Please try again.");
+    }
   };
 
   if (!isOpen) return null;
@@ -54,20 +70,16 @@ function LoginRegisterModal({ isOpen, onClose }) {
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-md z-50">
       <div className="bg-site p-8 rounded-lg shadow-lg w-full max-w-md border border-gray-700 relative animate-fadeIn max-h-[90vh] overflow-y-auto">
-        {/* Close Button */}
         <button
           className="absolute top-4 right-4 text-white text-lg hover:scale-110 transition-transform"
           onClick={onClose}
         >
           ✖
         </button>
-
-        {/* Title */}
         <h2 className="h2 text-center text-gradient mb-4">
           {isLogin ? "Login to Your Account" : "Create a New Account"}
         </h2>
-
-        {/* Form */}
+        {error && <p className="text-red-500 text-center mb-4">{error}</p>}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-white font-medium">Username</label>
@@ -81,7 +93,6 @@ function LoginRegisterModal({ isOpen, onClose }) {
               required
             />
           </div>
-
           {!isLogin && (
             <>
               <div>
@@ -148,7 +159,6 @@ function LoginRegisterModal({ isOpen, onClose }) {
               </div>
             </>
           )}
-
           <div>
             <label className="block text-white font-medium">Password</label>
             <input
@@ -161,14 +171,10 @@ function LoginRegisterModal({ isOpen, onClose }) {
               required
             />
           </div>
-
-          {/* Submit Button */}
           <button className="btn btn-lg w-full font-semibold transition duration-300 hover:bg-opacity-80">
             {isLogin ? "Login" : "Register"}
           </button>
         </form>
-
-        {/* Switch Mode */}
         <p className="text-center text-gray-400 mt-4">
           {isLogin ? "New user?" : "Already have an account?"}{" "}
           <button

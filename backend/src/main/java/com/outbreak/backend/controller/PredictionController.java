@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/api")
 public class PredictionController {
 
@@ -32,12 +33,13 @@ public class PredictionController {
 
     }
 
-    @PostMapping("/public/prediction")
+    @PostMapping("/public/prediction/{districtId}")
     public ResponseEntity<PredictionResponseDTO> getPrediction(@RequestBody WeatherDataDTO weatherDataDTO, @PathVariable Long districtId){
 
         PredictionResponseDTO predictionResponseDTO = predictionService.getPrediction(weatherDataDTO, districtId);
         return new ResponseEntity<>(predictionResponseDTO, HttpStatus.CREATED);
 
     }
+
 
 }

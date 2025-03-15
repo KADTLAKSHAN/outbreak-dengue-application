@@ -8,12 +8,15 @@ import com.outbreak.backend.payload.UserDTO;
 import com.outbreak.backend.payload.UserResponse;
 import com.outbreak.backend.repositories.DivisionRepository;
 import com.outbreak.backend.repositories.UserRepository;
+import com.outbreak.backend.security.response.MessageResponse;
+import com.outbreak.backend.util.AuthUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -33,6 +36,9 @@ public class UserServiceImpl implements UserService{
 
     @Autowired
     PasswordEncoder encoder;
+
+    @Autowired
+    AuthUtil authUtil;
 
     @Override
     public UserResponse searchUserByIdOrUserName(String input, Integer pageNumber, Integer pageSize, String sortBy, String sortOrder) {
@@ -117,9 +123,39 @@ public class UserServiceImpl implements UserService{
 
         User user = modelMapper.map(userDTO,User.class);
         user.setUserId(userId);
-        user.setPassword(encoder.encode(userDTO.getPassword()));
+
+        if (userDTO.getPassword() != null && !userDTO.getPassword().isEmpty()) {
+            user.setPassword(encoder.encode(userDTO.getPassword()));
+        } else {
+            user.setPassword(savedUser.getPassword());
+        }
+
         user.setDivision(division);
+        user.setRoles(savedUser.getRoles());
         savedUser = userRepository.save(user);
         return modelMapper.map(savedUser,UserDTO.class);
+    }
+
+    @Override
+    public UserDTO getUser() {
+
+        User user = authUtil.loggedInUser();
+        return modelMapper.map(user, UserDTO.class);
+
+    }
+
+    @Override
+    public UserDTO updateUserProfile(UserDTO userDTO) {
+        Long userId = authUtil.loggedInUserId();
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User","userId",userId));
+
+        user.setFirstName(userDTO.getFirstName());
+        user.setLastName(userDTO.getLastName());
+
+        userRepository.save(user);
+
+        return modelMapper.map(user, UserDTO.class);
+
     }
 }

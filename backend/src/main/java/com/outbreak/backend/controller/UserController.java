@@ -61,6 +61,19 @@ public class UserController {
 
     }
 
+    @GetMapping("/public/user")
+    public ResponseEntity<UserDTO> getUser(){
+        UserDTO userDTO = userService.getUser();
+        return new ResponseEntity<>(userDTO, HttpStatus.OK);
+    }
+
+    @PutMapping("/public/users/profile")
+    public ResponseEntity<UserDTO> updateUserProfile(@RequestBody UserDTO userDTO){
+
+        UserDTO saveUserDTO = userService.updateUserProfile(userDTO);
+        return new ResponseEntity<>(saveUserDTO, HttpStatus.OK);
+
+    }
 
 
 }

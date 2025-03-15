@@ -7,7 +7,18 @@ function Header({ isAuthOpen, setIsAuthOpen }) {
         <div className="container mx-auto">
           <div className="flex justify-between items-center">
             {/* Logo */}
-            <a href="#">Outbreak</a>
+            <a
+              href="#"
+              className="text-gradient text-2xl font-primary font-bold tracking-[4px] uppercase"
+              style={{
+                background:
+                  "linear-gradient(92.23deg, #42A6E3 21.43%, #FF56F6 100%)",
+                WebkitBackgroundClip: "text",
+                color: "transparent",
+              }}
+            >
+              Outbreak Guard
+            </a>
 
             {/* User Portal Button */}
             <button

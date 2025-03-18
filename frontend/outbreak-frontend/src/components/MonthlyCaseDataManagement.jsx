@@ -36,7 +36,7 @@ function MonthlyCaseDataManagement() {
     } catch (error) {
       console.error("Error fetching case data:", error);
       if (error.response && error.response.status === 400) {
-        alert(error.response.data.message);
+        // alert(error.response.data.message);
       }
     }
   };

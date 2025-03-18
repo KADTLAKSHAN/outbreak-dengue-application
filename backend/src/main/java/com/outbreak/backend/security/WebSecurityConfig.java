@@ -88,6 +88,7 @@ public class WebSecurityConfig {
                                 .requestMatchers("/api/public/caseData/get").permitAll()
                                 .requestMatchers("/api/public/division").permitAll()
                                 .requestMatchers("/api/public/users/profile").permitAll()
+                                .requestMatchers("/api/public/article").permitAll()
                                 .anyRequest().authenticated()
                 );
 

@@ -59,7 +59,7 @@ def predict_dengue(data: DengueRequest):
     try:
         input_data = preprocess_input(data)
         log_prediction = model.predict(input_data)
-        prediction = round(np.expm1(log_prediction[0]))  # Inverse of log transformation
+        prediction = round(np.expm1(log_prediction[0]))  
         return {"predicted_cases": prediction}
     except ValidationError as ve:
         raise HTTPException(status_code=422, detail=str(ve))

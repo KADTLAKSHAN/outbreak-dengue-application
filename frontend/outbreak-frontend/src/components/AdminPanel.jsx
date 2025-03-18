@@ -8,6 +8,7 @@ import DivisionManagement from "./DivisionManagement";
 import MonthlyCaseDataManagement from "./MonthlyCaseDataManagement";
 import AlertManagement from "./AlertManagement";
 import WeatherDetails from "./WeatherDetails";
+import ManageArticles from "./ManageArticles";
 
 function AdminPanel({ onLogout }) {
   const [user, setUser] = useState(null);
@@ -53,6 +54,7 @@ function AdminPanel({ onLogout }) {
               "Monthly Case Data Management",
               "Alert Management",
               "Enter Week Weather Details",
+              "Manage Articles",
             ].map((tab) => (
               <li
                 key={tab}
@@ -95,6 +97,7 @@ function AdminPanel({ onLogout }) {
           )}
           {activeTab === "Alert Management" && <AlertManagement />}
           {activeTab === "Enter Week Weather Details" && <WeatherDetails />}
+          {activeTab === "Manage Articles" && <ManageArticles />}
         </div>
       </div>
     </div>

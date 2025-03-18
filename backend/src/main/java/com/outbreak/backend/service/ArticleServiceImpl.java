@@ -32,11 +32,15 @@ public class ArticleServiceImpl implements ArticleService{
     ModelMapper modelMapper;
 
     @Override
-    public ArticleDTO addArticle(ArticleDTO articleDTO)  {
+    public ArticleDTO addArticle(ArticleDTO articleDTO, MultipartFile image) throws IOException {
 
         Article article = modelMapper.map(articleDTO, Article.class);
-        article.setImage("default.png");
-
+        if(image == null || image.isEmpty()) {
+            article.setImage("default.png");
+        }else{
+            String fileName = fileService.uploadImage(path, image);
+            article.setImage(fileName);
+        }
         Article savedArticle = articleRepository.save(article);
         return modelMapper.map(savedArticle, ArticleDTO.class);
     }

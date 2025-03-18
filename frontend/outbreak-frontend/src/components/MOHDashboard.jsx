@@ -5,6 +5,7 @@ import DashboardNavBar from "./DashboardNav";
 import CasePredictionPanel from "./CasePredictionPanel";
 import AlertsPanel from "./AlertsPanel";
 import MOHComplaintsPanel from "./MOHComplaintsPanel";
+import ManageArticles from "./ManageArticles";
 
 function MOHDashboard({ onLogout }) {
   const [user, setUser] = useState(null);
@@ -48,6 +49,7 @@ function MOHDashboard({ onLogout }) {
               "Case Prediction",
               "Alerts",
               "Complaints",
+              "Manage Articles",
             ].map((tab) => (
               <li
                 key={tab}
@@ -105,6 +107,7 @@ function MOHDashboard({ onLogout }) {
           {activeTab === "Case Prediction" && <CasePredictionPanel />}
           {activeTab === "Alerts" && <AlertsPanel />}
           {activeTab === "Complaints" && <MOHComplaintsPanel />}
+          {activeTab === "Manage Articles" && <ManageArticles />}
         </div>
       </div>
     </div>

@@ -7,7 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
 public interface ArticleService {
-    ArticleDTO addArticle(ArticleDTO articleDTO);
+    ArticleDTO addArticle(ArticleDTO articleDTO, MultipartFile image) throws IOException;
 
     ArticleDTO updateProductImage(Long articleId, MultipartFile image) throws IOException;
 

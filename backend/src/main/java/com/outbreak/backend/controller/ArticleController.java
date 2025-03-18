@@ -21,9 +21,13 @@ public class ArticleController {
     ArticleService articleService;
 
     @PostMapping("/admin/article")
-    public ResponseEntity<ArticleDTO> addArticle(@Valid @RequestBody ArticleDTO articleDTO) {
+    public ResponseEntity<ArticleDTO> addArticle(@RequestParam("title") String title,@RequestParam("description") String description,@RequestParam("authorName") String authorName, @RequestParam("image") MultipartFile image) throws IOException {
 
-        ArticleDTO savedArticleDTO = articleService.addArticle(articleDTO);
+        ArticleDTO articleDTO = new ArticleDTO();
+        articleDTO.setTitle(title);
+        articleDTO.setDescription(description);
+        articleDTO.setAuthorName(authorName);
+        ArticleDTO savedArticleDTO = articleService.addArticle(articleDTO, image);
         return new ResponseEntity<>(savedArticleDTO, HttpStatus.CREATED);
 
     }

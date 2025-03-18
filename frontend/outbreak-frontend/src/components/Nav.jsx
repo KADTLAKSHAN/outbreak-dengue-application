@@ -7,7 +7,8 @@ import { GrInfo, GrArticle } from "react-icons/gr";
 //link
 import { Link } from "react-scroll";
 
-function Nav() {
+function Nav({ isArticlePopupOpen }) {
+  if (isArticlePopupOpen) return null;
   return (
     <nav className="fixed bottom-2 lg:bottom-8 w-full overflow-hidden z-50">
       <div className="container mx-auto">

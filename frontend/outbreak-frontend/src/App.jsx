@@ -20,15 +20,16 @@ import MOHDashboard from "./components/MOHDashboard";
 import AdminPanel from "./components/AdminPanel";
 
 function Homepage({ isAuthOpen, setIsAuthOpen }) {
+  const [isArticlePopupOpen, setIsArticlePopupOpen] = useState(false);
   return (
     <div className="bg-site bg-no-repeat bg-cover overflow-hidden">
       <Header isAuthOpen={isAuthOpen} setIsAuthOpen={setIsAuthOpen} />
       <Banner />
-      {!isAuthOpen && <Nav />}
+      {!isAuthOpen && <Nav isArticlePopupOpen={isArticlePopupOpen} />}
       <Alerts />
       <Analysis />
       <DengueDetails />
-      <Articles />
+      <Articles setIsArticlePopupOpen={setIsArticlePopupOpen} />
       <About />
     </div>
   );

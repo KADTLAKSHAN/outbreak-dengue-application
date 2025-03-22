@@ -18,6 +18,7 @@ import LoginRegisterModal from "./components/LoginRegisterModal";
 import PublicDashboard from "./components/PublicDashboard";
 import MOHDashboard from "./components/MOHDashboard";
 import AdminPanel from "./components/AdminPanel";
+import Diagram from "./components/Diagram";
 
 function Homepage({ isAuthOpen, setIsAuthOpen }) {
   const [isArticlePopupOpen, setIsArticlePopupOpen] = useState(false);
@@ -30,6 +31,7 @@ function Homepage({ isAuthOpen, setIsAuthOpen }) {
       <Analysis />
       <DengueDetails />
       <Articles setIsArticlePopupOpen={setIsArticlePopupOpen} />
+      <Diagram />
       <About />
     </div>
   );

@@ -89,6 +89,7 @@ public class WebSecurityConfig {
                                 .requestMatchers("/api/public/division").permitAll()
                                 .requestMatchers("/api/public/users/profile").permitAll()
                                 .requestMatchers("/api/public/article").permitAll()
+                                .requestMatchers("/api/public/graph/monthly").permitAll()
                                 .anyRequest().authenticated()
                 );
 
@@ -164,7 +165,7 @@ public class WebSecurityConfig {
 
             if(!divisionRepository.existsByDivisionName("Nugegoda")){
 
-                Division nugegodaDivision = new Division("Nugegoda_Division");
+                Division nugegodaDivision = new Division("Nugegoda");
                 District dst1 = districtRepository.findByDistrictName("Colombo");
                 nugegodaDivision.setDistrict(dst1);
 
@@ -172,7 +173,7 @@ public class WebSecurityConfig {
 
             }
 
-            Division cmbDivision = divisionRepository.findByDivisionName("Nugegoda_Division");
+            Division cmbDivision = divisionRepository.findByDivisionName("Nugegoda");
 //            System.out.println("division_id : " + cmbDivision.getDivisionId() + " " + "Division name :" + cmbDivision.getDivisionName());
 
 

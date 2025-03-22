@@ -8,6 +8,8 @@ import { TypeAnimation } from "react-type-animation";
 import { motion } from "framer-motion";
 //variant
 import { fadeIn } from "../variants";
+//link
+import { Link } from "react-scroll";
 
 function Banner() {
   return (
@@ -62,9 +64,14 @@ function Banner() {
               className="flex max-w-max gap-x-6 items-center mb-12 mx-auto lg:mx-0"
             >
               <button className="btn btn-lg">Predict Dengue Cases</button>
-              <a href="#" className="text-gradient btn-link">
+              <Link
+                to="Diagram"
+                smooth={true} // Enables smooth scrolling
+                duration={1000} // duration of the scroll (in ms)
+                className="text-gradient btn-link cursor-pointer"
+              >
                 View Disease Trends
-              </a>
+              </Link>
             </motion.div>
           </div>
           {/* image */}

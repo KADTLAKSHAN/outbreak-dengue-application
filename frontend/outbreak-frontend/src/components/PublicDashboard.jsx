@@ -5,6 +5,7 @@ import DashboardNavBar from "./DashboardNav";
 import CasePredictionPanel from "./CasePredictionPanel";
 import ComplaintPanel from "./ComplaintPanel";
 import BarChartDistrict from "./BarChartDistrict";
+import LineGraphWeek from "./LineGraphWeek";
 
 function PublicDashboard({ onLogout }) {
   const [user, setUser] = useState(null);
@@ -132,6 +133,12 @@ function PublicDashboard({ onLogout }) {
                     District-wise Dengue Cases
                   </h4>
                   <BarChartDistrict />
+                </div>
+                <div className="mb-8">
+                  <h4 className="text-md font-semibold text-black mb-4">
+                    Weekly Dengue Cases
+                  </h4>
+                  <LineGraphWeek />
                 </div>
 
                 {/* Add more graphs here */}

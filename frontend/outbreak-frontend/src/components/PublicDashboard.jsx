@@ -4,6 +4,7 @@ import axios from "axios";
 import DashboardNavBar from "./DashboardNav";
 import CasePredictionPanel from "./CasePredictionPanel";
 import ComplaintPanel from "./ComplaintPanel";
+import BarChartDistrict from "./BarChartDistrict";
 
 function PublicDashboard({ onLogout }) {
   const [user, setUser] = useState(null);
@@ -118,6 +119,30 @@ function PublicDashboard({ onLogout }) {
                 Welcome, {user?.firstName}!
               </h2>
               <p className="text-gray-700">Explore the dashboard features.</p>
+
+              {/* Add Data Visualization Section */}
+              <div className="mt-8">
+                <h3 className="text-lg font-semibold text-black mb-6 text-center">
+                  Data Visualization
+                </h3>
+
+                {/* Add the BarChart component */}
+                <div className="mb-8">
+                  <h4 className="text-md font-semibold text-black mb-4">
+                    District-wise Dengue Cases
+                  </h4>
+                  <BarChartDistrict />
+                </div>
+
+                {/* Add more graphs here */}
+                {/* Example: Another Graph */}
+                {/* <div className="mb-8">
+                  <h4 className="text-md font-semibold text-black mb-4">
+                    Monthly Dengue Cases
+                  </h4>
+                  <AnotherGraphComponent />
+                </div> */}
+              </div>
             </div>
           )}
 

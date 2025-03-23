@@ -1,5 +1,6 @@
 package com.outbreak.backend.controller;
 
+import com.outbreak.backend.payload.DistrictTotalCasesResponse;
 import com.outbreak.backend.payload.GraphDataDTO;
 import com.outbreak.backend.payload.MonthlyCaseGraphResponse;
 import com.outbreak.backend.service.GraphDataService;
@@ -63,6 +64,12 @@ public class GraphDataController {
     public ResponseEntity<List<MonthlyCaseGraphResponse>> getGraphDataForLatestYear(){
         List<MonthlyCaseGraphResponse> monthlyCaseGraphResponses = graphDataService.getMonthlyCasesForLatestYear();
         return new ResponseEntity<>(monthlyCaseGraphResponses, HttpStatus.OK);
+    }
+
+    @GetMapping("/public/graph/district")
+    public ResponseEntity<List<DistrictTotalCasesResponse>> getDistrictTotalCasesForLatestYear() {
+        List<DistrictTotalCasesResponse> districtTotalCasesResponses = graphDataService.getDistrictTotalCasesForLatestYear();
+        return new ResponseEntity<>(districtTotalCasesResponses, HttpStatus.OK);
     }
 
 }

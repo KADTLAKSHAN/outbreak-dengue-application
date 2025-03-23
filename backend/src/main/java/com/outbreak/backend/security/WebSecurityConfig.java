@@ -90,6 +90,7 @@ public class WebSecurityConfig {
                                 .requestMatchers("/api/public/users/profile").permitAll()
                                 .requestMatchers("/api/public/article").permitAll()
                                 .requestMatchers("/api/public/graph/monthly").permitAll()
+                                .requestMatchers("/api/public/graph/district").permitAll()
                                 .anyRequest().authenticated()
                 );
 

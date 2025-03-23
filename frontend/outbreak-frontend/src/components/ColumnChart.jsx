@@ -14,6 +14,11 @@ function ColumnChart() {
       chart: {
         height: 350,
         type: "bar",
+        toolbar: {
+          tools: {
+            download: true, // Enable download button
+          },
+        },
       },
       plotOptions: {
         bar: {
@@ -142,7 +147,9 @@ function ColumnChart() {
 
   return (
     <div className="bg-site p-6">
-      <div id="chart">
+      <div id="chart" className="custom-chart">
+        {" "}
+        {/* Added custom-chart class for styling */}
         <ReactApexChart
           options={state.options}
           series={state.series}

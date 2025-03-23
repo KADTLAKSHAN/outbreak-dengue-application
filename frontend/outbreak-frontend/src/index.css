@@ -68,6 +68,27 @@
   }
 }
 
+/* Custom chart toolbar and download button styles */
+.custom-chart .apexcharts-toolbar .apexcharts-menu-icon {
+  color: #ff5733 !important; /* Change the icon color */
+}
+
+/* Customize the background color of the dropdown menu */
+.custom-chart .apexcharts-toolbar .apexcharts-menu {
+  background-color: #333333; /* Dark background for the dropdown */
+}
+
+/* Customize the color of items in the dropdown menu */
+.custom-chart .apexcharts-toolbar .apexcharts-menu li {
+  color: #ffffff !important; /* White text for dropdown items */
+}
+
+/* Customize the hover effect for the dropdown items */
+.custom-chart .apexcharts-toolbar .apexcharts-menu li:hover {
+  background-color: #ff5733; /* Add hover color for the items */
+  color: #ffffff; /* White text on hover */
+}
+
 @theme {
   --color-primary: #aab9ff;
   --font-primary: "Orbitron", sans-serif;

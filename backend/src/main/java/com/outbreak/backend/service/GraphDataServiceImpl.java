@@ -4,6 +4,7 @@ import com.outbreak.backend.exceptions.APIException;
 import com.outbreak.backend.exceptions.ResourceNotFoundException;
 import com.outbreak.backend.model.District;
 import com.outbreak.backend.model.GraphData;
+import com.outbreak.backend.payload.DistrictTotalCasesResponse;
 import com.outbreak.backend.payload.GraphDataDTO;
 import com.outbreak.backend.payload.MonthlyCaseGraphResponse;
 import com.outbreak.backend.repositories.DistrictRepository;
@@ -149,5 +150,34 @@ public class GraphDataServiceImpl implements GraphDataService{
 
         return responseList;
 
+    }
+    @Override
+    public List<DistrictTotalCasesResponse> getDistrictTotalCasesForLatestYear() {
+        // Step 1: Get the latest year
+        Integer latestYear = graphDataRepository.findMaxYear();
+        if (latestYear == null) {
+            throw new APIException("No data available.");
+        }
+
+        // Step 2: Fetch total dengue cases for each district
+        List<Object[]> results = graphDataRepository.getTotalCasesByDistrict(latestYear);
+
+        // Step 3: Convert query result to DTO
+        List<DistrictTotalCasesResponse> responseList = new ArrayList<>();
+        long idCounter = 1; // Auto-incremented ID
+
+        for (Object[] row : results) {
+            String districtName = (String) row[0];     // District name
+            Integer totalCases = ((Number) row[1]).intValue(); // Total cases
+
+            responseList.add(new DistrictTotalCasesResponse(
+                    idCounter++,  // Auto-incremented ID
+                    districtName,
+                    latestYear,
+                    totalCases
+            ));
+        }
+
+        return responseList;
     }
 }

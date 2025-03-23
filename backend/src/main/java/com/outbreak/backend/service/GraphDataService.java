@@ -1,5 +1,6 @@
 package com.outbreak.backend.service;
 
+import com.outbreak.backend.payload.DistrictTotalCasesResponse;
 import com.outbreak.backend.payload.GraphDataDTO;
 import com.outbreak.backend.payload.MonthlyCaseGraphResponse;
 
@@ -17,4 +18,6 @@ public interface GraphDataService {
     GraphDataDTO updateGraphData(GraphDataDTO graphDataDTO, Long graphDataId);
 
     List<MonthlyCaseGraphResponse> getMonthlyCasesForLatestYear();
+
+    List<DistrictTotalCasesResponse> getDistrictTotalCasesForLatestYear();
 }

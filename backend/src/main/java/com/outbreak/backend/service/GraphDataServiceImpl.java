@@ -4,10 +4,7 @@ import com.outbreak.backend.exceptions.APIException;
 import com.outbreak.backend.exceptions.ResourceNotFoundException;
 import com.outbreak.backend.model.District;
 import com.outbreak.backend.model.GraphData;
-import com.outbreak.backend.payload.DistrictTotalCasesResponse;
-import com.outbreak.backend.payload.GraphDataDTO;
-import com.outbreak.backend.payload.MonthlyCaseGraphResponse;
-import com.outbreak.backend.payload.WeeklyCasesResponse;
+import com.outbreak.backend.payload.*;
 import com.outbreak.backend.repositories.DistrictRepository;
 import com.outbreak.backend.repositories.GraphDataRepository;
 import org.modelmapper.ModelMapper;
@@ -205,6 +202,31 @@ public class GraphDataServiceImpl implements GraphDataService{
                     idCounter++,
                     week,
                     latestYear,
+                    totalCases
+            );
+
+            responseList.add(response);
+        }
+
+        return responseList;
+    }
+
+    @Override
+    public List<YearlyCasesResponse> getYearlyCases() {
+        //Step 1: Fetch yearly cases summary
+        List<Object[]> yearlyCases = graphDataRepository.getYearlyCasesSummary();
+
+        //Step 2: Convert results into DTOs
+        List<YearlyCasesResponse> responseList = new ArrayList<>();
+        long idCounter = 1;
+
+        for (Object[] row : yearlyCases) {
+            Integer year = (Integer) row[0];
+            Integer totalCases = ((Number) row[1]).intValue();
+
+            YearlyCasesResponse response = new YearlyCasesResponse(
+                    idCounter++,
+                    year,
                     totalCases
             );
 

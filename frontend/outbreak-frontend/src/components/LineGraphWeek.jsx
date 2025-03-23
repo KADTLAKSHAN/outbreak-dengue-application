@@ -64,7 +64,13 @@ function LineGraphWeek() {
   return (
     <div>
       {series.length > 0 ? (
-        <Chart options={options} series={series} type="line" height={350} />
+        <Chart
+          options={options}
+          series={series}
+          type="line"
+          height={350}
+          className="custom-chart"
+        />
       ) : (
         <p>Loading chart data...</p>
       )}

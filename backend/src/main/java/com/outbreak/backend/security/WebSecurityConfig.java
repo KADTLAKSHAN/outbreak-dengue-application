@@ -92,6 +92,7 @@ public class WebSecurityConfig {
                                 .requestMatchers("/api/public/graph/monthly").permitAll()
                                 .requestMatchers("/api/public/graph/district").permitAll()
                                 .requestMatchers("/api/public/graph/week").permitAll()
+                                .requestMatchers("/api/public/graph/year").permitAll()
                                 .anyRequest().authenticated()
                 );
 

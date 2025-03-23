@@ -7,6 +7,7 @@ import com.outbreak.backend.model.GraphData;
 import com.outbreak.backend.payload.DistrictTotalCasesResponse;
 import com.outbreak.backend.payload.GraphDataDTO;
 import com.outbreak.backend.payload.MonthlyCaseGraphResponse;
+import com.outbreak.backend.payload.WeeklyCasesResponse;
 import com.outbreak.backend.repositories.DistrictRepository;
 import com.outbreak.backend.repositories.GraphDataRepository;
 import org.modelmapper.ModelMapper;
@@ -176,6 +177,38 @@ public class GraphDataServiceImpl implements GraphDataService{
                     latestYear,
                     totalCases
             ));
+        }
+
+        return responseList;
+    }
+
+    @Override
+    public List<WeeklyCasesResponse> getWeeklyCasesForLatestYear() {
+        //Step 1: Find the latest year
+        Integer latestYear = graphDataRepository.findMaxYear();
+        if (latestYear == null) {
+            throw new APIException("No data available for the latest year.");
+        }
+
+        //Step 2: Get weekly dengue cases summary
+        List<Object[]> weeklyCases = graphDataRepository.getWeeklyCasesSummary(latestYear);
+
+        //Step 3: Convert results into DTOs
+        List<WeeklyCasesResponse> responseList = new ArrayList<>();
+        long idCounter = 1;
+
+        for (Object[] row : weeklyCases) {
+            Integer week = (Integer) row[0];
+            Integer totalCases = ((Number) row[1]).intValue();
+
+            WeeklyCasesResponse response = new WeeklyCasesResponse(
+                    idCounter++,
+                    week,
+                    latestYear,
+                    totalCases
+            );
+
+            responseList.add(response);
         }
 
         return responseList;

@@ -3,6 +3,7 @@ package com.outbreak.backend.controller;
 import com.outbreak.backend.payload.DistrictTotalCasesResponse;
 import com.outbreak.backend.payload.GraphDataDTO;
 import com.outbreak.backend.payload.MonthlyCaseGraphResponse;
+import com.outbreak.backend.payload.WeeklyCasesResponse;
 import com.outbreak.backend.service.GraphDataService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,6 +71,12 @@ public class GraphDataController {
     public ResponseEntity<List<DistrictTotalCasesResponse>> getDistrictTotalCasesForLatestYear() {
         List<DistrictTotalCasesResponse> districtTotalCasesResponses = graphDataService.getDistrictTotalCasesForLatestYear();
         return new ResponseEntity<>(districtTotalCasesResponses, HttpStatus.OK);
+    }
+
+    @GetMapping("/public/graph/week")
+    public ResponseEntity<List<WeeklyCasesResponse>> getWeeklyCasesForLatestYear() {
+        List<WeeklyCasesResponse> weeklyCasesResponses = graphDataService.getWeeklyCasesForLatestYear();
+        return new ResponseEntity<>(weeklyCasesResponses, HttpStatus.OK);
     }
 
 }

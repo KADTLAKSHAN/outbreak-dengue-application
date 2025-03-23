@@ -3,6 +3,7 @@ package com.outbreak.backend.service;
 import com.outbreak.backend.payload.DistrictTotalCasesResponse;
 import com.outbreak.backend.payload.GraphDataDTO;
 import com.outbreak.backend.payload.MonthlyCaseGraphResponse;
+import com.outbreak.backend.payload.WeeklyCasesResponse;
 
 import java.util.List;
 
@@ -20,4 +21,6 @@ public interface GraphDataService {
     List<MonthlyCaseGraphResponse> getMonthlyCasesForLatestYear();
 
     List<DistrictTotalCasesResponse> getDistrictTotalCasesForLatestYear();
+
+    List<WeeklyCasesResponse> getWeeklyCasesForLatestYear();
 }

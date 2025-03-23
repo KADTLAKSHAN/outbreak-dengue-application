@@ -25,4 +25,11 @@ public interface GraphDataRepository extends JpaRepository<GraphData,Long> {
             "FROM GraphData g WHERE g.caseYear = :latestYear " +
             "GROUP BY g.district.districtName ORDER BY SUM(g.numberOfCases) DESC")
     List<Object[]> getTotalCasesByDistrict(Integer latestYear);
+
+    @Query("SELECT g.caseWeek, SUM(g.numberOfCases) " +
+            "FROM GraphData g " +
+            "WHERE g.caseYear = :latestYear " +
+            "GROUP BY g.caseWeek " +
+            "ORDER BY g.caseWeek")
+    List<Object[]> getWeeklyCasesSummary(Integer latestYear);
 }

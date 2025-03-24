@@ -16,7 +16,7 @@ public class Article {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long articleId;
     private String title;
-    @Column(length = 1000)
+    @Column(length = 3000)
     private String description;
     private String image;
     private String authorName;

@@ -14,7 +14,9 @@ public class Complaint {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long complaintId;
     private String complaintType;
+    @Column(length = 3000)
     private String complaintDetails;
+    @Column(length = 3000)
     private String complaintReply;
     private LocalDate complaintDate;
     private Boolean status;

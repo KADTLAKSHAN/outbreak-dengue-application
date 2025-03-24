@@ -35,23 +35,24 @@ function LineGraphWeek() {
     title: {
       text: year ? `${year} - Weekly Dengue Cases` : "Weekly Dengue Cases",
       align: "center",
-      style: { color: "#000", fontSize: "16px" }, // Black font
+      style: { color: "#000", fontSize: "16px" },
     },
     xaxis: {
       categories: series.length > 0 ? series[0].data.map((d) => d[0]) : [], // Use week numbers
-      labels: { style: { colors: "#000" } }, // Black font
-      title: { text: "Week Number", style: { color: "#000" } }, // Black font
+      labels: { style: { colors: "#000" } },
+      title: { text: "Week Number", style: { color: "#000" } },
     },
     yaxis: {
-      title: { text: "Number of Cases", style: { color: "#000" } }, // Black font
-      labels: { style: { colors: "#000" } }, // Black font
+      title: { text: "Number of Cases", style: { color: "#000" } },
+      labels: { style: { colors: "#000" } },
     },
+    colors: ["#000000"],
     stroke: { curve: "smooth" },
     dataLabels: { enabled: false },
-    grid: { show: true, borderColor: "#000" }, // Black grid
+    grid: { show: true, borderColor: "#000" },
     tooltip: {
       theme: "dark", // Dark theme tooltip
-      style: { fontSize: "12px", color: "#fff" }, // White text in tooltip
+      style: { fontSize: "12px", color: "#fff" },
       y: {
         formatter: (value) => `${value} cases`,
       },

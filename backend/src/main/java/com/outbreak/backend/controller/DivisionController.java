@@ -1,6 +1,7 @@
 package com.outbreak.backend.controller;
 
 import com.outbreak.backend.config.AppConstants;
+import com.outbreak.backend.payload.DatasetResponse;
 import com.outbreak.backend.payload.DivisionDTO;
 import com.outbreak.backend.payload.DivisionResponse;
 import com.outbreak.backend.service.DivisionService;
@@ -62,6 +63,16 @@ public class DivisionController {
         DivisionDTO savedDivisionDTO = divisionService.updateDivision(divisionDTO,divisionId);
         return new ResponseEntity<>(savedDivisionDTO,HttpStatus.OK);
 
+    }
+
+    @GetMapping("/public/division/table")
+    public ResponseEntity<DivisionResponse> getAllDivisionsWithPagination(
+            @RequestParam(name = "pageNumber", defaultValue = AppConstants.PAGE_NUMBER, required = false) Integer pageNumber,
+            @RequestParam(name = "pageSize", defaultValue = AppConstants.PAGE_SIZE, required = false) Integer pageSize,
+            @RequestParam(name = "sortBy", defaultValue = AppConstants.SORT_DIVISIONS_BY, required = false) String sortBy,
+            @RequestParam(name = "sortOrder", defaultValue = AppConstants.SORT_DIR, required = false) String sortOrder){
+        DivisionResponse divisionResponse = divisionService.getAllDivisionsWithPagination(pageNumber, pageSize, sortBy, sortOrder);
+        return new ResponseEntity<>(divisionResponse, HttpStatus.OK);
     }
 
 

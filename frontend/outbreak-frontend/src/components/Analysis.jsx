@@ -97,7 +97,7 @@ function Analysis() {
           {/* Month (Static) */}
           <div className="stats__item flex-1 xl:border-r flex flex-col items-center">
             <div className="text-4xl xl:text-[50px] font-semibold text-font-primary xl:mb-2">
-              January
+              March
             </div>
             <div>Month</div>
           </div>
@@ -109,7 +109,7 @@ function Analysis() {
                 <CountUp
                   start={0}
                   end={cases[currentDistrict] || 0} // Show case count for active district
-                  duration={3}
+                  duration={2}
                   key={currentDistrict} // Ensure CountUp restarts on district change
                 />
               ) : (

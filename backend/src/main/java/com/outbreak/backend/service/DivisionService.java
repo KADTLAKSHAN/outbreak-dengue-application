@@ -15,4 +15,6 @@ public interface DivisionService {
     DivisionDTO updateDivision(DivisionDTO divisionDTO, Long divisionId);
 
     DivisionResponse searchDivisionByIdOrDivisionName(String input, Integer pageNumber, Integer pageSize, String sortBy, String sortOrder);
+
+    DivisionResponse getAllDivisionsWithPagination(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder);
 }

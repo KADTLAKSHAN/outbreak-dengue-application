@@ -2,13 +2,8 @@ package com.outbreak.backend.service;
 
 import com.outbreak.backend.exceptions.APIException;
 import com.outbreak.backend.exceptions.ResourceNotFoundException;
-import com.outbreak.backend.model.CaseData;
-import com.outbreak.backend.model.District;
-import com.outbreak.backend.model.Division;
-import com.outbreak.backend.model.User;
-import com.outbreak.backend.payload.CaseDataDTO;
-import com.outbreak.backend.payload.DivisionDTO;
-import com.outbreak.backend.payload.DivisionResponse;
+import com.outbreak.backend.model.*;
+import com.outbreak.backend.payload.*;
 import com.outbreak.backend.repositories.DistrictRepository;
 import com.outbreak.backend.repositories.DivisionRepository;
 import com.outbreak.backend.repositories.UserRepository;
@@ -144,6 +139,33 @@ public class DivisionServiceImpl implements DivisionService{
         divisionResponse.setTotalElements(divisionPage.getTotalElements());
         divisionResponse.setTotalpages(divisionPage.getTotalPages());
         divisionResponse.setLastPage(divisionPage.isLast());
+        return divisionResponse;
+    }
+
+    @Override
+    public DivisionResponse getAllDivisionsWithPagination(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder) {
+        Sort sortByAndOrder = sortOrder.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+
+        Pageable pageDetails = PageRequest.of(pageNumber, pageSize, sortByAndOrder);
+        Page<Division> divisionPage = divisionRepository.findAll(pageDetails);
+
+        List<Division> divisionList = divisionPage.getContent();
+
+        if(divisionList.isEmpty())
+            throw new APIException("Divisions not exists");
+
+        List<DivisionDTO> divisionDTOS = divisionList.stream()
+                .map(division -> modelMapper.map(division, DivisionDTO.class))
+                .toList();
+
+        DivisionResponse divisionResponse = new DivisionResponse();
+        divisionResponse.setContent(divisionDTOS);
+        divisionResponse.setPageNumber(divisionPage.getNumber());
+        divisionResponse.setPageSize(divisionPage.getSize());
+        divisionResponse.setTotalElements(divisionPage.getTotalElements());
+        divisionResponse.setTotalpages(divisionPage.getTotalPages());
+        divisionResponse.setLastPage(divisionPage.isLast());
+
         return divisionResponse;
     }
 }

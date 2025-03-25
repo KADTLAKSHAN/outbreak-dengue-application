@@ -12,6 +12,7 @@ import {
   FaCloudSunRain,
   FaNewspaper,
   FaTachometerAlt,
+  FaDatabase,
 } from "react-icons/fa";
 import DashboardNavBar from "./DashboardNav";
 import UserManagement from "./UserManagement";
@@ -24,6 +25,7 @@ import ManageArticles from "./ManageArticles";
 import BarChartDistrict from "./BarChartDistrict";
 import LineGraphWeek from "./LineGraphWeek";
 import LineGraphYear from "./LineGraphYear";
+import DatasetManagement from "./DatasetManagement";
 
 function AdminPanel({ onLogout }) {
   const [user, setUser] = useState(null);
@@ -70,6 +72,7 @@ function AdminPanel({ onLogout }) {
               { name: "Alert Management", icon: <FaBell /> },
               { name: "Enter Week Weather Details", icon: <FaCloudSunRain /> },
               { name: "Manage Articles", icon: <FaNewspaper /> },
+              { name: "Dataset Management", icon: <FaDatabase /> },
             ].map(({ name, icon }) => (
               <li
                 key={name}
@@ -179,6 +182,7 @@ function AdminPanel({ onLogout }) {
           {activeTab === "Alert Management" && <AlertManagement />}
           {activeTab === "Enter Week Weather Details" && <WeatherDetails />}
           {activeTab === "Manage Articles" && <ManageArticles />}
+          {activeTab === "Dataset Management" && <DatasetManagement />}
         </div>
       </div>
     </div>

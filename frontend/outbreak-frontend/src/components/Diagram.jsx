@@ -15,6 +15,14 @@ function Diagram() {
           viewport={{ once: false, amount: 0.7 }}
           className="container mx-auto"
         >
+          {/* Heading */}
+          <div className="text-center mb-15">
+            <h2 className="h2 font-bold mb-5">Yearly and Monthly Breakdown</h2>
+            <p className="text-gray-400 text-lg mt-2">
+              Identification of months with the highest case counts.
+            </p>
+          </div>
+
           <ColumnChart />
         </motion.div>
       </div>

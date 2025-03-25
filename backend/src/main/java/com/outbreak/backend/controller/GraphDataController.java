@@ -1,5 +1,6 @@
 package com.outbreak.backend.controller;
 
+import com.outbreak.backend.config.AppConstants;
 import com.outbreak.backend.payload.*;
 import com.outbreak.backend.service.GraphDataService;
 import jakarta.validation.Valid;
@@ -8,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.xml.crypto.Data;
 import java.util.List;
 
 @RestController
@@ -80,6 +82,51 @@ public class GraphDataController {
     public ResponseEntity<List<YearlyCasesResponse>> getYearlyCases() {
         List<YearlyCasesResponse> yearlyCasesResponses = graphDataService.getYearlyCases();
         return new ResponseEntity<>(yearlyCasesResponses, HttpStatus.OK);
+    }
+
+    @PostMapping("/admin/dataset")
+    public ResponseEntity<GraphDataDTO> saveData(@Valid @RequestBody GraphDataDTO graphDataDTO){
+
+        GraphDataDTO savedGraphDataDTO = graphDataService.saveData(graphDataDTO);
+        return new ResponseEntity<>(savedGraphDataDTO, HttpStatus.CREATED);
+
+    }
+
+    @DeleteMapping("/admin/dataset/{graphDataId}")
+    public ResponseEntity<GraphDataDTO> deleteData(@PathVariable Long graphDataId){
+
+        GraphDataDTO deletedGraphDataDTO = graphDataService.deleteData(graphDataId);
+        return new ResponseEntity<>(deletedGraphDataDTO, HttpStatus.OK);
+
+    }
+
+    @PutMapping("/admin/dataset/{graphDataId}")
+    public ResponseEntity<GraphDataDTO> updateData(@Valid @RequestBody GraphDataDTO graphDataDTO, @PathVariable Long graphDataId){
+
+        GraphDataDTO savedGraphDataDTO = graphDataService.updateData(graphDataDTO,graphDataId);
+        return new ResponseEntity<>(savedGraphDataDTO,HttpStatus.OK);
+
+    }
+
+    @GetMapping("/public/dataset")
+    public ResponseEntity<DatasetResponse> getAllData(
+            @RequestParam(name = "pageNumber", defaultValue = AppConstants.PAGE_NUMBER, required = false) Integer pageNumber,
+            @RequestParam(name = "pageSize", defaultValue = AppConstants.PAGE_SIZE, required = false) Integer pageSize,
+            @RequestParam(name = "sortBy", defaultValue = AppConstants.SORT_DATASET_BY, required = false) String sortBy,
+            @RequestParam(name = "sortOrder", defaultValue = AppConstants.SORT_DIR, required = false) String sortOrder){
+        DatasetResponse datasetResponse = graphDataService.getAllData(pageNumber, pageSize, sortBy, sortOrder);
+        return new ResponseEntity<>(datasetResponse, HttpStatus.OK);
+    }
+
+    @GetMapping("/public/dataset/district/{input}")
+    public ResponseEntity<DatasetResponse> getDataByDistrictNameOrCaseYear(
+            @PathVariable String input,
+            @RequestParam(name = "pageNumber", defaultValue = AppConstants.PAGE_NUMBER, required = false) Integer pageNumber,
+            @RequestParam(name = "pageSize", defaultValue = AppConstants.PAGE_SIZE, required = false) Integer pageSize,
+            @RequestParam(name = "sortBy", defaultValue = AppConstants.SORT_DATASET_BY, required = false) String sortBy,
+            @RequestParam(name = "sortOrder", defaultValue = AppConstants.SORT_DIR, required = false) String sortOrder){
+        DatasetResponse datasetResponse = graphDataService.searchDataByDistrictNameOrCaseYear(input, pageNumber, pageSize, sortBy, sortOrder);
+        return new ResponseEntity<>(datasetResponse, HttpStatus.OK);
     }
 
 }

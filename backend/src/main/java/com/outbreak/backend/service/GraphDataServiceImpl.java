@@ -2,19 +2,23 @@ package com.outbreak.backend.service;
 
 import com.outbreak.backend.exceptions.APIException;
 import com.outbreak.backend.exceptions.ResourceNotFoundException;
+import com.outbreak.backend.model.Alert;
 import com.outbreak.backend.model.District;
 import com.outbreak.backend.model.GraphData;
+import com.outbreak.backend.model.WeatherData;
 import com.outbreak.backend.payload.*;
 import com.outbreak.backend.repositories.DistrictRepository;
 import com.outbreak.backend.repositories.GraphDataRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -235,4 +239,121 @@ public class GraphDataServiceImpl implements GraphDataService{
 
         return responseList;
     }
+
+    @Override
+    public GraphDataDTO saveData(GraphDataDTO graphDataDTO) {
+        District district = districtRepository.findById(graphDataDTO.getDistrictId())
+                .orElseThrow(() -> new ResourceNotFoundException("District", "districtId", graphDataDTO.getDistrictId()));
+
+        // Check if a record with the same district, caseYear, caseMonth, and caseWeek exists
+        Optional<GraphData> existingGraphData = graphDataRepository.findByDistrictAndCaseYearAndCaseMonthAndCaseWeek(
+                district, graphDataDTO.getCaseYear(), graphDataDTO.getCaseMonth(), graphDataDTO.getCaseWeek()
+        );
+
+        if (existingGraphData.isPresent()) {
+            throw new APIException("Data already exists for this district, month, week, and year!");
+        }
+
+        // If no record exists, create the new GraphData
+        GraphData graphData = modelMapper.map(graphDataDTO, GraphData.class);
+        graphData.setDistrict(district);
+        graphData.setDistrictName(district.getDistrictName());
+
+        try {
+            graphDataRepository.save(graphData);
+            return modelMapper.map(graphData, GraphDataDTO.class);
+        } catch (DataIntegrityViolationException e) {
+            throw new APIException("An error occurred while saving the graph data.");
+        }
+    }
+
+    @Override
+    public GraphDataDTO deleteData(Long graphDataId) {
+        GraphData graphData = graphDataRepository.findById(graphDataId)
+                .orElseThrow(() -> new ResourceNotFoundException("GraphData", "graphDataId", graphDataId));
+
+        graphDataRepository.delete(graphData);
+        return modelMapper.map(graphData, GraphDataDTO.class);
+    }
+
+    @Override
+    public GraphDataDTO updateData(GraphDataDTO graphDataDTO, Long graphDataId) {
+        GraphData graphDataFromDB = graphDataRepository.findById(graphDataId)
+                .orElseThrow(() -> new ResourceNotFoundException("GraphData", "graphDataId", graphDataId));
+
+        District district = districtRepository.findById(graphDataDTO.getDistrictId())
+                .orElseThrow(() -> new ResourceNotFoundException("District", "districtId",graphDataDTO.getDistrictId()));
+
+        GraphData graphData = modelMapper.map(graphDataDTO, GraphData.class);
+        graphData.setGraphDataId(graphDataId);
+        graphData.setDistrictName(district.getDistrictName());
+        graphData.setDistrict(district);
+        graphDataFromDB = graphDataRepository.save(graphData);
+        return modelMapper.map(graphDataFromDB, GraphDataDTO.class);
+    }
+
+    @Override
+    public DatasetResponse getAllData(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder) {
+        Sort sortByAndOrder = sortOrder.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+
+        Pageable pageDetails = PageRequest.of(pageNumber, pageSize, sortByAndOrder);
+        Page<GraphData> graphDataPage = graphDataRepository.findAll(pageDetails);
+
+        List<GraphData> graphDataList = graphDataPage.getContent();
+
+        if(graphDataList.isEmpty())
+            throw new APIException("Data not exists");
+
+        List<GraphDataDTO> graphDataDTOS = graphDataList.stream()
+                .map(data -> modelMapper.map(data, GraphDataDTO.class))
+                .toList();
+
+        DatasetResponse datasetResponse = new DatasetResponse();
+        datasetResponse.setContent(graphDataDTOS);
+        datasetResponse.setPageNumber(graphDataPage.getNumber());
+        datasetResponse.setPageSize(graphDataPage.getSize());
+        datasetResponse.setTotalElements(graphDataPage.getTotalElements());
+        datasetResponse.setTotalpages(graphDataPage.getTotalPages());
+        datasetResponse.setLastPage(graphDataPage.isLast());
+
+        return datasetResponse;
+    }
+
+    @Override
+    public DatasetResponse searchDataByDistrictNameOrCaseYear(String input, Integer pageNumber, Integer pageSize, String sortBy, String sortOrder) {
+        Sort sortByAndOrder = sortOrder.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+
+        Pageable pageDetails = PageRequest.of(pageNumber, pageSize, sortByAndOrder);
+
+        Page<GraphData> graphDataPage;
+
+        // Check if input is a valid caseYear (numeric)
+        try {
+            Long caseYear = Long.parseLong(input);
+            graphDataPage = graphDataRepository.findByCaseYear(caseYear, pageDetails);
+        } catch (NumberFormatException e) {
+            // If not numeric, treat it as an District name search
+            graphDataPage = graphDataRepository.findByDistrict_DistrictNameContainingIgnoreCase(input, pageDetails);
+        }
+
+        List<GraphData> graphDataList = graphDataPage.getContent();
+
+        if(graphDataList.isEmpty())
+            throw new APIException("Data not found with value");
+
+        List<GraphDataDTO> graphDataDTOS = graphDataList.stream()
+                .map(data -> modelMapper.map(data, GraphDataDTO.class))
+                .toList();
+
+        DatasetResponse datasetResponse = new DatasetResponse();
+        datasetResponse.setContent(graphDataDTOS);
+        datasetResponse.setPageNumber(graphDataPage.getNumber());
+        datasetResponse.setPageSize(graphDataPage.getSize());
+        datasetResponse.setTotalElements(graphDataPage.getTotalElements());
+        datasetResponse.setTotalpages(graphDataPage.getTotalPages());
+        datasetResponse.setLastPage(graphDataPage.isLast());
+        return datasetResponse;
+    }
+
+
 }

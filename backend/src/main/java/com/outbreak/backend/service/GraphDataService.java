@@ -22,4 +22,14 @@ public interface GraphDataService {
     List<WeeklyCasesResponse> getWeeklyCasesForLatestYear();
 
     List<YearlyCasesResponse> getYearlyCases();
+
+    GraphDataDTO saveData(GraphDataDTO graphDataDTO);
+
+    GraphDataDTO deleteData(Long graphDataId);
+
+    GraphDataDTO updateData(GraphDataDTO graphDataDTO, Long graphDataId);
+
+    DatasetResponse getAllData(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder);
+
+    DatasetResponse searchDataByDistrictNameOrCaseYear(String input, Integer pageNumber, Integer pageSize, String sortBy, String sortOrder);
 }

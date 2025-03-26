@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 function LoginRegisterModal({ isOpen, onClose, onLoginSuccess }) {
   const [isLogin, setIsLogin] = useState(true);
@@ -19,7 +20,10 @@ function LoginRegisterModal({ isOpen, onClose, onLoginSuccess }) {
     fetch("http://localhost:8080/api/public/division")
       .then((res) => res.json())
       .then((data) => setDivisions(data))
-      .catch((err) => console.error("Error fetching divisions:", err));
+      .catch((err) => {
+        console.error("Error fetching divisions:", err);
+        toast.error("Failed to load divisions. Please try again later.");
+      });
   }, []);
 
   const handleChange = (e) => {
@@ -37,31 +41,42 @@ function LoginRegisterModal({ isOpen, onClose, onLoginSuccess }) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
-        credentials: "include", // Include cookies in the request
+        credentials: "include",
       });
 
       const data = await response.json();
       console.log("Response:", data);
 
+      if (!response.ok) {
+        throw new Error(data.message || "Something went wrong");
+      }
+
       if (isLogin) {
-        // Ensure the response contains user data
         if (data && data.roles) {
-          // Store user data in localStorage
           localStorage.setItem("user", JSON.stringify(data));
-          alert("Login successful!");
+          toast.success("Login successful!");
           onClose();
-          onLoginSuccess(JSON.stringify(data)); // Call the callback here
+          onLoginSuccess(JSON.stringify(data));
           navigate("/dashboard");
         } else {
           throw new Error("Invalid user data in login response");
         }
       } else {
-        alert("Registration successful! You can now log in.");
+        toast.success("Registration successful! You can now log in.");
         setIsLogin(true);
+        setFormData({
+          username: "",
+          password: "",
+          email: "",
+          firstName: "",
+          lastName: "",
+          divisionId: "",
+        });
       }
     } catch (error) {
       console.error("Error:", error);
-      setError("Login failed. Please try again.");
+      toast.error(error.message || "Operation failed. Please try again.");
+      setError(error.message || "Operation failed. Please try again.");
     }
   };
 

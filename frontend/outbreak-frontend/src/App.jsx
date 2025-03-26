@@ -5,6 +5,8 @@ import {
   Navigate,
 } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
 import Header from "./components/Header";
 import Banner from "./components/Banner";
@@ -20,11 +22,16 @@ import MOHDashboard from "./components/MOHDashboard";
 import AdminPanel from "./components/AdminPanel";
 import Diagram from "./components/Diagram";
 
-function Homepage({ isAuthOpen, setIsAuthOpen }) {
+function Homepage({ isAuthOpen, setIsAuthOpen, userRole, onLoginSuccess }) {
   const [isArticlePopupOpen, setIsArticlePopupOpen] = useState(false);
   return (
     <div className="bg-site bg-no-repeat bg-cover overflow-hidden">
-      <Header isAuthOpen={isAuthOpen} setIsAuthOpen={setIsAuthOpen} />
+      <Header
+        isAuthOpen={isAuthOpen}
+        setIsAuthOpen={setIsAuthOpen}
+        userRole={userRole}
+        onLoginSuccess={onLoginSuccess}
+      />
       <Banner />
       {!isAuthOpen && <Nav isArticlePopupOpen={isArticlePopupOpen} />}
       <Alerts />
@@ -40,7 +47,6 @@ function Homepage({ isAuthOpen, setIsAuthOpen }) {
 function App() {
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [userRole, setUserRole] = useState(() => {
-    // Retrieve userRole from localStorage on initial load
     const storedUserRole = localStorage.getItem("userRole");
     return storedUserRole || null;
   });
@@ -53,9 +59,7 @@ function App() {
         try {
           const user = JSON.parse(storedUser);
 
-          // Ensure the user object has a roles property
           if (user && Array.isArray(user.roles)) {
-            // Prioritize roles correctly
             if (user.roles.includes("ROLE_ADMIN")) {
               setUserRole("admin");
             } else if (user.roles.includes("ROLE_MOH_USER")) {
@@ -83,7 +87,6 @@ function App() {
     return () => window.removeEventListener("storage", updateUserRole);
   }, []);
 
-  // Persist userRole to localStorage whenever it changes
   useEffect(() => {
     if (userRole) {
       localStorage.setItem("userRole", userRole);
@@ -96,24 +99,24 @@ function App() {
     try {
       const response = await fetch("http://localhost:8080/api/auth/signout", {
         method: "POST",
-        credentials: "include", // Ensure cookies are sent
+        credentials: "include",
       });
 
       if (!response.ok) {
         throw new Error("Failed to logout. Please try again.");
       }
 
-      // Clear local storage and cookies after successful logout
       localStorage.removeItem("user");
       localStorage.removeItem("userRole");
       document.cookie =
         "springBootDengue=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
 
-      // Redirect to homepage
+      setUserRole(null);
+      toast.success("Logged out successfully!");
       window.location.replace("/");
     } catch (error) {
       console.error("Logout error:", error);
-      alert("Error logging out. Please try again.");
+      toast.error("Error logging out. Please try again.");
     }
   };
 
@@ -121,7 +124,6 @@ function App() {
     try {
       const user = JSON.parse(userData);
 
-      // Ensure the user object has a roles property
       if (user && Array.isArray(user.roles)) {
         if (user.roles.includes("ROLE_ADMIN")) {
           setUserRole("admin");
@@ -144,16 +146,31 @@ function App() {
 
   return (
     <Router>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
       <Routes>
-        {/* Home Page */}
         <Route
           path="/"
           element={
-            <Homepage isAuthOpen={isAuthOpen} setIsAuthOpen={setIsAuthOpen} />
+            <Homepage
+              isAuthOpen={isAuthOpen}
+              setIsAuthOpen={setIsAuthOpen}
+              userRole={userRole}
+              onLoginSuccess={handleLoginSuccess}
+            />
           }
         />
 
-        {/* Dashboard Route with Role-Based Redirection */}
         <Route
           path="/dashboard"
           element={
@@ -169,14 +186,8 @@ function App() {
           }
         />
 
-        {/* Catch-All Route */}
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
-      <LoginRegisterModal
-        isOpen={isAuthOpen}
-        onClose={() => setIsAuthOpen(false)}
-        onLoginSuccess={handleLoginSuccess}
-      />
     </Router>
   );
 }

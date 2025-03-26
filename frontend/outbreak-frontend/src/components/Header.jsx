@@ -1,6 +1,19 @@
+import { useNavigate } from "react-router-dom";
 import LoginRegisterModal from "./LoginRegisterModal";
 
-function Header({ isAuthOpen, setIsAuthOpen }) {
+function Header({ isAuthOpen, setIsAuthOpen, userRole, onLoginSuccess }) {
+  const navigate = useNavigate();
+
+  const handleUserPortalClick = () => {
+    if (userRole) {
+      // User is logged in, navigate directly to dashboard
+      navigate("/dashboard");
+    } else {
+      // User is not logged in, show login modal
+      setIsAuthOpen(true);
+    }
+  };
+
   return (
     <>
       <header className="py-8">
@@ -23,19 +36,20 @@ function Header({ isAuthOpen, setIsAuthOpen }) {
             {/* User Portal Button */}
             <button
               className="btn btn-sm cursor-pointer"
-              onClick={() => setIsAuthOpen(true)}
+              onClick={handleUserPortalClick}
             >
-              User Portal
+              {userRole ? "Go to Dashboard" : "User Portal"}
             </button>
           </div>
         </div>
       </header>
 
-      {/* Modal Component */}
-      {isAuthOpen && (
+      {/* Modal Component - Only show if user is not logged in */}
+      {isAuthOpen && !userRole && (
         <LoginRegisterModal
           isOpen={isAuthOpen}
           onClose={() => setIsAuthOpen(false)}
+          onLoginSuccess={onLoginSuccess}
         />
       )}
     </>

@@ -2,6 +2,20 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Select from "react-select";
 
+// Weather code mapping
+const weatherCodeMap = {
+  0: "Cloud development not observed or not observable",
+  1: "Clouds generally dissolving or becoming less developed",
+  2: "State of sky on the whole unchanged",
+  3: "Clouds generally forming or developing",
+  51: "Continuous drizzle, slight at time of observation",
+  53: "Continuous drizzle, moderate at time of observation",
+  55: "Continuous drizzle, heavy (dense) at time of observation",
+  61: "Rain, not freezing, intermittent, slight at time of observation",
+  63: "Rain, not freezing, intermittent, moderate at time of observation",
+  65: "Rain, not freezing, intermittent, heavy at time of observation",
+};
+
 function CasePredictionPanel() {
   const [districts, setDistricts] = useState([]);
   const [selectedDistrict, setSelectedDistrict] = useState(null);
@@ -174,6 +188,30 @@ function CasePredictionPanel() {
               )}
             </div>
           ))}
+
+          {/* Weather Code Guide Card */}
+          <div className="col-span-2">
+            <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
+              <h3 className="font-semibold text-blue-800 mb-2">
+                Weather Code Guide
+              </h3>
+              <div className="grid grid-cols-2 gap-2">
+                {Object.entries(weatherCodeMap).map(([code, description]) => (
+                  <div
+                    key={code}
+                    className={`p-2 text-sm rounded ${
+                      formData.weatherCode === parseInt(code)
+                        ? "bg-blue-400 border border-blue-300 font-medium"
+                        : "bg-white text-black"
+                    }`}
+                  >
+                    <span className="font-bold text-blue-600">{code}:</span>{" "}
+                    {description}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
 
         <button

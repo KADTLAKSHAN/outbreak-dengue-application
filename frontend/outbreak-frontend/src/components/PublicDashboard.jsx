@@ -14,6 +14,7 @@ import ComplaintPanel from "./ComplaintPanel";
 import BarChartDistrict from "./BarChartDistrict";
 import LineGraphWeek from "./LineGraphWeek";
 import LineGraphYear from "./LineGraphYear";
+import SystemPredictionCard from "./SystemPredictionCard";
 
 function PublicDashboard({ onLogout }) {
   const [user, setUser] = useState(null);
@@ -115,6 +116,12 @@ function PublicDashboard({ onLogout }) {
                   dengue trends, and stay informed! 🚀
                 </p>
               </div>
+
+              {/* System auto prediction card here */}
+              <div className="mt-8 mb-8 p-6 bg-gray-100 rounded-lg shadow-md">
+                <SystemPredictionCard />
+              </div>
+
               <div className="mt-8">
                 <h3 className="text-2xl font-semibold text-black mb-6 text-center">
                   📊 Dengue Data Insights

@@ -72,7 +72,7 @@ function Alerts() {
               <span className="text-lime-300">Stay updated</span> with the
               latest dengue alerts in your district.
             </h3>
-            <button className="btn btn-sm">View More</button>
+            <button className="btn btn-sm">Stay Informed!</button>
           </motion.div>
 
           {/* Alert List with Scroll */}

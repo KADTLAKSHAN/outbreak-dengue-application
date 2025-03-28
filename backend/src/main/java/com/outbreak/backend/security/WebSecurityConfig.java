@@ -93,6 +93,8 @@ public class WebSecurityConfig {
                                 .requestMatchers("/api/public/graph/district").permitAll()
                                 .requestMatchers("/api/public/graph/week").permitAll()
                                 .requestMatchers("/api/public/graph/year").permitAll()
+                                .requestMatchers("/api/public/division/{districtId}").permitAll()
+                                .requestMatchers("/api/public/district").permitAll()
                                 .anyRequest().authenticated()
                 );
 

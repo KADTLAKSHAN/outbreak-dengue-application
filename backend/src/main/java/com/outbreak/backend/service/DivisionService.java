@@ -17,4 +17,6 @@ public interface DivisionService {
     DivisionResponse searchDivisionByIdOrDivisionName(String input, Integer pageNumber, Integer pageSize, String sortBy, String sortOrder);
 
     DivisionResponse getAllDivisionsWithPagination(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder);
+
+    List<DivisionDTO> getAllDivisionsByDistrict(Long districtId);
 }

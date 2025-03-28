@@ -168,4 +168,22 @@ public class DivisionServiceImpl implements DivisionService{
 
         return divisionResponse;
     }
+
+    @Override
+    public List<DivisionDTO> getAllDivisionsByDistrict(Long districtId) {
+
+        District district = districtRepository.findById(districtId)
+                .orElseThrow(() -> new ResourceNotFoundException("District", "districtId", districtId));
+
+        List<Division> divisionList = divisionRepository.findByDistrict(district);
+
+        if(divisionList.isEmpty())
+            throw new APIException("Division data not exists");
+
+        List<DivisionDTO> divisionDTOList = divisionList.stream()
+                .map(division -> modelMapper.map(division, DivisionDTO.class))
+                .toList();
+
+        return divisionDTOList;
+    }
 }

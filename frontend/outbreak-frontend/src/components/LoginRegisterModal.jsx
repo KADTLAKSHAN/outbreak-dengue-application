@@ -10,21 +10,44 @@ function LoginRegisterModal({ isOpen, onClose, onLoginSuccess }) {
     email: "",
     firstName: "",
     lastName: "",
+    districtId: "",
     divisionId: "",
   });
+  const [districts, setDistricts] = useState([]);
   const [divisions, setDivisions] = useState([]);
   const [error, setError] = useState("");
+  const [isLoadingDivisions, setIsLoadingDivisions] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch("http://localhost:8080/api/public/division")
+    fetch("http://localhost:8080/api/public/district")
       .then((res) => res.json())
-      .then((data) => setDivisions(data))
+      .then((data) => setDistricts(data.content || []))
       .catch((err) => {
-        console.error("Error fetching divisions:", err);
-        toast.error("Failed to load divisions. Please try again later.");
+        console.error("Error fetching districts:", err);
+        toast.error("Failed to load districts. Please try again later.");
       });
   }, []);
+
+  useEffect(() => {
+    if (formData.districtId) {
+      setIsLoadingDivisions(true);
+      fetch(`http://localhost:8080/api/public/division/${formData.districtId}`)
+        .then((res) => res.json())
+        .then((data) => {
+          setDivisions(data);
+          // Reset divisionId when district changes
+          setFormData((prev) => ({ ...prev, divisionId: "" }));
+        })
+        .catch((err) => {
+          console.error("Error fetching divisions:", err);
+          toast.error("Failed to load divisions. Please try again later.");
+        })
+        .finally(() => setIsLoadingDivisions(false));
+    } else {
+      setDivisions([]);
+    }
+  }, [formData.districtId]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -70,6 +93,7 @@ function LoginRegisterModal({ isOpen, onClose, onLoginSuccess }) {
           email: "",
           firstName: "",
           lastName: "",
+          districtId: "",
           divisionId: "",
         });
       }
@@ -152,6 +176,28 @@ function LoginRegisterModal({ isOpen, onClose, onLoginSuccess }) {
               </div>
               <div>
                 <label className="block text-white font-medium">
+                  Select District
+                </label>
+                <select
+                  name="districtId"
+                  className="w-full p-3 bg-gray-900 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:outline-none ring-offset-2"
+                  value={formData.districtId}
+                  onChange={handleChange}
+                  required
+                >
+                  <option value="">Choose your district</option>
+                  {districts.map((district) => (
+                    <option
+                      key={district.districtId}
+                      value={district.districtId}
+                    >
+                      {district.districtName}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="block text-white font-medium">
                   Select Division
                 </label>
                 <select
@@ -160,6 +206,7 @@ function LoginRegisterModal({ isOpen, onClose, onLoginSuccess }) {
                   value={formData.divisionId}
                   onChange={handleChange}
                   required
+                  disabled={!formData.districtId || isLoadingDivisions}
                 >
                   <option value="">Choose your division</option>
                   {divisions.map((division) => (
@@ -171,6 +218,11 @@ function LoginRegisterModal({ isOpen, onClose, onLoginSuccess }) {
                     </option>
                   ))}
                 </select>
+                {isLoadingDivisions && (
+                  <p className="text-gray-400 text-sm mt-1">
+                    Loading divisions...
+                  </p>
+                )}
               </div>
             </>
           )}

@@ -75,5 +75,11 @@ public class DivisionController {
         return new ResponseEntity<>(divisionResponse, HttpStatus.OK);
     }
 
+    @GetMapping("/public/division/{districtId}")
+    public ResponseEntity<List<DivisionDTO>> getAllDivisionsByDistrict(@PathVariable Long districtId){
+        List<DivisionDTO> divisionDTOS = divisionService.getAllDivisionsByDistrict(districtId);
+        return new ResponseEntity<>(divisionDTOS,HttpStatus.OK);
+    }
+
 
 }

@@ -77,7 +77,11 @@ function About() {
             </div>
             <div className="flex gap-x-8 items-center">
               <button className="btn btn-lg">Learn More</button>
-              <a href="#" className="text-gradient btn-link">
+              <a
+                href="https://www.dengue.health.gov.lk/web/index.php/en/"
+                className="text-gradient btn-link"
+                target="_blank"
+              >
                 Prevention Tips
               </a>
             </div>

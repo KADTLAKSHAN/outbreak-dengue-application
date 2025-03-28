@@ -56,7 +56,7 @@ function Articles({ setIsArticlePopupOpen }) {
                       src={`http://localhost:8080/images/${article.image}`}
                       alt={article.title}
                     />
-                    <div className="bg-amber-200 absolute bottom-0 left-0 text-white text-sm font-medium uppercase py-1 px-3">
+                    <div className="bg-amber-200 absolute bottom-0 left-0 text-gray-600 text-sm font-medium uppercase py-1 px-3">
                       {article.authorName}
                     </div>
                   </div>

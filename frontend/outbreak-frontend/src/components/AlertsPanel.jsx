@@ -136,9 +136,11 @@ function AlertsPanel({ user }) {
         <label className="block text-black font-semibold">Alert Type:</label>
         <Select
           options={alertTypes}
-          value={alertTypes.find((type) => type.value === newAlert.alertType)}
+          value={
+            alertTypes.find((type) => type.value === newAlert.alertType) || null
+          }
           onChange={(option) =>
-            setNewAlert({ ...newAlert, alertType: option.value })
+            setNewAlert({ ...newAlert, alertType: option ? option.value : "" })
           }
           className="mb-4 text-black"
         />

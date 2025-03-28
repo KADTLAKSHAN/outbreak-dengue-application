@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,6 +22,7 @@ public class ArticleController {
     ArticleService articleService;
 
     @PostMapping("/admin/article")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MOH_USER')")
     public ResponseEntity<ArticleDTO> addArticle(@RequestParam("title") String title,@RequestParam("description") String description,@RequestParam("authorName") String authorName, @RequestParam("image") MultipartFile image) throws IOException {
 
         ArticleDTO articleDTO = new ArticleDTO();
@@ -33,6 +35,7 @@ public class ArticleController {
     }
 
     @PutMapping("/public/article/{articleId}/image")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MOH_USER')")
     public ResponseEntity<ArticleDTO> updateArticleImage(@PathVariable Long articleId, @RequestParam("image") MultipartFile image) throws IOException {
 
         ArticleDTO updateArticle = articleService.updateProductImage(articleId, image);
@@ -41,6 +44,7 @@ public class ArticleController {
     }
 
     @DeleteMapping("/admin/article/{articleId}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MOH_USER')")
     public ResponseEntity<ArticleDTO> deleteArticle(@PathVariable Long articleId){
 
         ArticleDTO deletedArticle = articleService.deleteArticle(articleId);

@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -44,6 +45,7 @@ public class DistrictController {
 
 
     @PostMapping("/admin/district")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<DistrictDTO> createDistrict(@Valid @RequestBody DistrictDTO districtDTO){
 
         DistrictDTO savedDistrictDTO = districtService.createDistrict(districtDTO);
@@ -52,6 +54,7 @@ public class DistrictController {
     }
 
     @DeleteMapping("/admin/district/{districtId}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<DistrictDTO> deleteDistrict(@PathVariable Long districtId){
 
         DistrictDTO deleteDistrictDTO = districtService.deleteDistrict(districtId);
@@ -60,6 +63,7 @@ public class DistrictController {
     }
 
     @PutMapping("/admin/district/{districtId}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<DistrictDTO> updateDistrict(@Valid @RequestBody DistrictDTO districtDTO, @PathVariable Long districtId){
 
         DistrictDTO savedDistrictDTO = districtService.updateDistrict(districtDTO,districtId);

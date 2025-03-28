@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -42,6 +43,7 @@ public class DivisionController {
 
 
     @PostMapping("/admin/division")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<DivisionDTO> createDivision(@Valid @RequestBody DivisionDTO divisionDTO){
 
         DivisionDTO savedDivisionDTO = divisionService.createDivision(divisionDTO);
@@ -50,6 +52,7 @@ public class DivisionController {
     }
 
     @DeleteMapping("/admin/division/{divisionId}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<DivisionDTO> deleteDivision(@PathVariable Long divisionId){
 
         DivisionDTO deleteDivisionDTO = divisionService.deleteDivision(divisionId);
@@ -58,6 +61,7 @@ public class DivisionController {
     }
 
     @PutMapping("/admin/division/{divisionId}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<DivisionDTO> updateDivision(@Valid @RequestBody DivisionDTO divisionDTO, @PathVariable Long divisionId){
 
         DivisionDTO savedDivisionDTO = divisionService.updateDivision(divisionDTO,divisionId);

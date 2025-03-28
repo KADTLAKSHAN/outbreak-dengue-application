@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -17,6 +18,7 @@ public class AlertController {
     AlertService alertService;
 
     @PostMapping("/public/alerts/{districtId}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MOH_USER')")
     public ResponseEntity<AlertDTO> createAlert(@Valid @RequestBody AlertDTO alertDTO, @PathVariable Long districtId){
 
         AlertDTO savedAlertDTO = alertService.createAlert(alertDTO,districtId);
@@ -25,6 +27,7 @@ public class AlertController {
     }
 
     @DeleteMapping("/admin/alerts/{alertId}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MOH_USER')")
     public ResponseEntity<AlertDTO> deleteAlert(@PathVariable Long alertId){
 
         AlertDTO deletedAlertDTO = alertService.deleteAlert(alertId);
@@ -66,6 +69,7 @@ public class AlertController {
 
 
     @PutMapping("/admin/alert/{alertId}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MOH_USER')")
     public ResponseEntity<AlertDTO> updateAlerts(@Valid @RequestBody AlertDTO alertDTO, @PathVariable Long alertId){
 
         AlertDTO savedAlertDTO = alertService.updateAlert(alertDTO,alertId);

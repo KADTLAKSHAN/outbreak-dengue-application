@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,6 +19,7 @@ public class DengueCaseDataController {
     DengueCaseDataService dengueCaseDataService;
 
     @PostMapping("/public/caseData/{districtId}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<CaseDataDTO> addCaseDataYear(@Valid @RequestBody CaseDataDTO caseDataDTO, @PathVariable Long districtId){
 
         CaseDataDTO savedCaseDataDTO = dengueCaseDataService.addCaseData(caseDataDTO,districtId);
@@ -32,6 +34,7 @@ public class DengueCaseDataController {
     }
 
     @PutMapping("/admin/caseData/{caseId}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<CaseDataDTO> updateCaseData(@Valid @RequestBody CaseDataDTO caseDataDTO, @PathVariable Long caseId){
 
         CaseDataDTO savedCaseDataDTO = dengueCaseDataService.updateCaseData(caseDataDTO,caseId);
@@ -40,6 +43,7 @@ public class DengueCaseDataController {
     }
 
     @DeleteMapping("/admin/caseData/{caseId}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<CaseDataDTO> deleteCaseData(@PathVariable Long caseId){
 
         CaseDataDTO deletedCaseDataDTO = dengueCaseDataService.deleteCaseData(caseId);

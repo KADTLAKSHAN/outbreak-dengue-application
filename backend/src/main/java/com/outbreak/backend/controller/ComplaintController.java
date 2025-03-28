@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -18,6 +19,7 @@ public class ComplaintController {
     ComplaintService complaintService;
 
     @PostMapping("/public/complaints")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PUBLIC_USER')")
     public ResponseEntity<ComplaintDTO> createComplaint(@Valid @RequestBody ComplaintDTO complaintDTO){
 
         ComplaintDTO savedComplaintDTO = complaintService.createComplaint(complaintDTO);
@@ -26,6 +28,7 @@ public class ComplaintController {
     }
 
     @DeleteMapping("/public/complaints/{complaintId}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<ComplaintDTO> deleteComplaintId(@PathVariable Long complaintId){
 
         ComplaintDTO deleteComplaintDTO = complaintService.deleteComplaint(complaintId);
@@ -34,6 +37,7 @@ public class ComplaintController {
     }
 
     @GetMapping("/public/complaints")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MOH_USER', 'ROLE_PUBLIC_USER')")
     public ResponseEntity<ComplaintResponse> getAllComplaints(
             @RequestParam(name = "pageNumber", defaultValue = AppConstants.PAGE_NUMBER, required = false) Integer pageNumber,
             @RequestParam(name = "pageSize", defaultValue = AppConstants.PAGE_SIZE, required = false) Integer pageSize){
@@ -42,6 +46,7 @@ public class ComplaintController {
     }
 
     @PutMapping("/public/complaints/{complaintId}")
+    @PreAuthorize("hasRole('ROLE_MOH_USER')")
     public ResponseEntity<ComplaintDTO> replyComplaint(@Valid @RequestBody ComplaintDTO complaintDTO, @PathVariable Long complaintId){
 
         ComplaintDTO savedComplaintDTO = complaintService.replyComplaint(complaintDTO,complaintId);
@@ -50,6 +55,7 @@ public class ComplaintController {
     }
 
     @GetMapping("public/complaints/user")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MOH_USER', 'ROLE_PUBLIC_USER')")
     public ResponseEntity<ComplaintResponse> getUserComplaints(@RequestParam(name = "pageNumber", defaultValue = AppConstants.PAGE_NUMBER, required = false) Integer pageNumber,
                                                                @RequestParam(name = "pageSize", defaultValue = AppConstants.PAGE_SIZE, required = false) Integer pageSize){
         ComplaintResponse complaintResponse = complaintService.getUserComplaints(pageNumber, pageSize);

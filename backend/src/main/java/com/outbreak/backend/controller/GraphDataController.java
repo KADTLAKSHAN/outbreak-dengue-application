@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -36,6 +37,7 @@ public class GraphDataController {
 
 
     @PostMapping("/admin/graph")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<GraphDataDTO> addGraphData(@Valid @RequestBody GraphDataDTO graphDataDTO){
 
         GraphDataDTO savedGraphData = graphDataService.addGraphData(graphDataDTO);
@@ -44,6 +46,7 @@ public class GraphDataController {
     }
 
     @DeleteMapping("/admin/graph/{graphDataId}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<GraphDataDTO> deleteGraphData(@PathVariable Long graphDataId){
 
         GraphDataDTO deletedGraphData = graphDataService.deleteGraphData(graphDataId);
@@ -52,6 +55,7 @@ public class GraphDataController {
     }
 
     @PutMapping("/admin/graph/{graphDataId}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<GraphDataDTO> updateGraphData(@Valid @RequestBody GraphDataDTO graphDataDTO, @PathVariable Long graphDataId){
 
         GraphDataDTO savedGraphData = graphDataService.updateGraphData(graphDataDTO,graphDataId);
@@ -84,6 +88,7 @@ public class GraphDataController {
     }
 
     @PostMapping("/admin/dataset")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<GraphDataDTO> saveData(@Valid @RequestBody GraphDataDTO graphDataDTO){
 
         GraphDataDTO savedGraphDataDTO = graphDataService.saveData(graphDataDTO);
@@ -92,6 +97,7 @@ public class GraphDataController {
     }
 
     @DeleteMapping("/admin/dataset/{graphDataId}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<GraphDataDTO> deleteData(@PathVariable Long graphDataId){
 
         GraphDataDTO deletedGraphDataDTO = graphDataService.deleteData(graphDataId);
@@ -100,6 +106,7 @@ public class GraphDataController {
     }
 
     @PutMapping("/admin/dataset/{graphDataId}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<GraphDataDTO> updateData(@Valid @RequestBody GraphDataDTO graphDataDTO, @PathVariable Long graphDataId){
 
         GraphDataDTO savedGraphDataDTO = graphDataService.updateData(graphDataDTO,graphDataId);

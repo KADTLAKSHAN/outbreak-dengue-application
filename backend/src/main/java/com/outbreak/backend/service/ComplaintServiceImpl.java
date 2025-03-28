@@ -28,6 +28,8 @@ public class ComplaintServiceImpl implements ComplaintService{
     ModelMapper modelMapper;
     @Autowired
     ComplaintRepository complaintRepository;
+    @Autowired
+    EmailService emailService;
 
     @Override
     public ComplaintDTO createComplaint(ComplaintDTO complaintDTO) {
@@ -95,6 +97,13 @@ public class ComplaintServiceImpl implements ComplaintService{
             complaint.setStatus(true);
             complaint.setComplaintAgentUserName(authUtil.loggedInUserName());
             complaintRepository.save(complaint);
+
+            // Send email to user
+            String subject = "Response to Your Complaint: " + complaint.getComplaintType();
+            String body = buildComplaintReplyEmail(complaint.getUser().getUserName(), complaint.getComplaintType(), complaint.getComplaintReply());
+
+            emailService.sendEmail(complaint.getUser().getEmail(), subject, body);
+
             return modelMapper.map(complaint, ComplaintDTO.class);
         }else{
             throw new APIException("The complaint has already been replied to");
@@ -129,5 +138,17 @@ public class ComplaintServiceImpl implements ComplaintService{
         complaintResponse.setLastPage(complaintPage.isLast());
 
         return complaintResponse;
+    }
+
+    private String buildComplaintReplyEmail(String username, String complaintType, String complaintReply) {
+        return "Dear " + username + ",\n\n"
+                + "We have reviewed your complaint regarding \"" + complaintType + "\" and would like to provide you with our response:\n\n"
+                + "--------------------------------------\n"
+                + complaintReply + "\n"
+                + "--------------------------------------\n\n"
+                + "If you have any further questions or concerns, please feel free to reach out.\n\n"
+                + "Best regards,\n"
+                + "The Support Team\n"
+                + "Dengue Outbreak Guard";
     }
 }

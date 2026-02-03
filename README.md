@@ -159,5 +159,5 @@ This project is developed for academic and research purposes.
 ---
 
 ## 🙌 Acknowledgements
-- Ministry of Health (MOH)
+- Dengue Control Unit and MOH Resources
 - Open-source libraries and frameworks used in this project

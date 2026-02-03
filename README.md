@@ -1,6 +1,6 @@
 # Dengue Case Prediction Web Application
 
-A web-based dengue case prediction system that forecasts dengue cases based on weather factors. The system supports public users and Ministry of Health (MOH) officials by providing predictive analytics, real-time dengue data visualization, alerts, complaints handling, and public awareness features.
+A web-based dengue case prediction system that forecasts dengue cases based on weather factors. The system supports public users and Health officials by providing predictive analytics, real-time dengue data visualization, alerts, complaints handling, and public awareness features.
 
 ---
 
